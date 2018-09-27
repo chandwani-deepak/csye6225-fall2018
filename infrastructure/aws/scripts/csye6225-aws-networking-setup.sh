@@ -42,7 +42,7 @@ aws ec2 create-tags --resources $InternetGatewayId --tags Key=Name,Value=$STACK_
 echo "Attaching the internet gateway to vpc"
 aws ec2 attach-internet-gateway --internet-gateway-id $InternetGatewayId --vpc-id $VPCid
 
-echo "Creating route table"
+echo "creating route table"
 routeTableId=`aws ec2 create-route-table --vpc-id $VPCid --query 'RouteTable.RouteTableId' --output text`
 aws ec2 create-tags --resources $routeTableId --tags Key=Name,Value=$STACK_NAME-csye6225-public-route-table
 
