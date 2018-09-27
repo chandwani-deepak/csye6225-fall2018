@@ -2,4 +2,4 @@
 
 1) Nitin Prince Reuben - reuben.n@husky.neu.edu
 2) Deepak Chandwani - chandwani.d@husky.neu.edu
-3) Nupur Deshpande - deshpande.nu@husly,neu.edu
+3) Nupur Deshpande - deshpande.nu@husky.neu.edu
