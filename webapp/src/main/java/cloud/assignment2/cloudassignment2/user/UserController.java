@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 @RestController
 public class UserController {
 	
-	
+
 	
 	@Autowired
 	private UserDao userdao;
@@ -65,7 +65,7 @@ public class UserController {
 	
 	
 	@RequestMapping(value="/user/register" , method=RequestMethod.POST)
-	public String addUser(@RequestBody UserPojo userpojo) {
+		public String addUser(@RequestBody UserPojo userpojo) {
 		if((userdao.checkUser(userpojo.getEmail()) == null)){
 			UserPojo up = new UserPojo();
 			up.setId(userpojo.getId());
