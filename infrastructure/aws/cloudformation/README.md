@@ -23,6 +23,7 @@ Run commands: Open terminal and run the following commands
 To launch : ./csye6225-aws-cf-terminate-stack.sh 'stackName' where stackname needs to passed through command lime
 
 **To create application**
+
 Run commands: Open terminal and run the following commands
 To launch : ./csye6225-aws-cf-terminate-stack.sh 'stackName' where stackname needs to passed through command lime
 
