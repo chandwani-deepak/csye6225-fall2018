@@ -1,0 +1,30 @@
+[
+	{
+		"ParameterKey":"KeyName",
+		"ParameterValue":"csye6225-fall2018-assignment3"
+	},
+	{
+		"ParameterKey":"InstanceType",
+		"ParameterValue":"t2.micro"
+	},
+	{
+		"ParameterKey":"AMIName",
+		"ParameterValue":"ami-9887c6e7"
+	},
+	{
+		"ParameterKey":"RootVolumeType",
+		"ParameterValue":"gp2"
+	},
+	{
+		"ParameterKey":"MyVpcId",
+		"ParameterValue":"vpc-079af84bd89e12acd"
+	},
+	{
+		"ParameterKey":"MySubnetId",
+		"ParameterValue":"subnet-06500ab26b286b9bd"
+	},
+	{
+		"ParameterKey":"AZone",
+		"ParameterValue":"us-east-1a"
+	}
+]
