@@ -12,7 +12,7 @@
 
 * csye6225-cf-terminate-application-stack.sh - This script is used to teardown `EC2` which is created using above script
 
-**To create Stack **
+**To create Stack**
 
 Run commands: Open terminal and run the following commands
 To launch : ./csye6225-aws-cf-create-stack.sh 'stackName' where stackname needs to passed through command lime
