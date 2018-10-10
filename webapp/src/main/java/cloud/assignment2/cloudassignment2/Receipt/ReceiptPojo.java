@@ -12,8 +12,17 @@ public class ReceiptPojo {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name="uuid", strategy="uuid")
-    private String id;
-    private String taskId;
+    private String receiptid;
+
+    public String getReceiptid() {
+        return receiptid;
+    }
+
+    public void setReceiptid(String receiptid) {
+        this.receiptid = receiptid;
+    }
+
+    private String transactionId;
     private String userId;
     private String url;
 
@@ -21,24 +30,16 @@ public class ReceiptPojo {
 
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
 
     public String getUserId() {
         return userId;
+    }
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public void setUserId(String userId) {

@@ -3,6 +3,7 @@ package cloud.assignment2.cloudassignment2.Receipt;
 import cloud.assignment2.cloudassignment2.Expense.ExpensePojo;
 import cloud.assignment2.cloudassignment2.Expense.ExpenseRepository;
 import cloud.assignment2.cloudassignment2.user.UserDao;
+import cloud.assignment2.cloudassignment2.user.UserPojo;
 import com.google.gson.JsonObject;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,7 +38,7 @@ public class ReceiptController {
     public String receiptUpload(@PathVariable(value="id") String transactionId, @RequestParam ("file") MultipartFile file, HttpServletRequest req,
                                 HttpServletResponse res){
 
-        System.out.println("DEV Environment");
+        System.out.println("Local Environment");
 
         JsonObject json = new JsonObject();
         String filePath = "/home/namanbhargava/Documents/";
@@ -61,7 +63,7 @@ public class ReceiptController {
                             e.printStackTrace();
                         }
                         ReceiptPojo receiptPojo = new ReceiptPojo();
-                        receiptPojo.setTaskId(transactionId);
+                        receiptPojo.setTransactionId(transactionId);
                         receiptPojo.setUrl(NewPath);
                         receiptPojo.setUserId(String.valueOf(result));
                         receiptRepository.save(receiptPojo);
@@ -90,5 +92,110 @@ public class ReceiptController {
         }
         return json.toString();
     }
+
+    @RequestMapping(value="/transaction/{id}/attachments", method=RequestMethod.GET)
+    public List<ReceiptPojo> getReceipt(@PathVariable(value="id") String transactionId, HttpServletRequest req, HttpServletResponse res){
+
+        JsonObject json = new JsonObject();
+        System.out.println("Local Environment");
+        String authHeader = req.getHeader("Authorization");
+
+        if (authHeader==null){
+            List<ReceiptPojo> newpojo1 = new ArrayList<ReceiptPojo>();
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return newpojo1;
+        }
+
+        else {
+            int result = userDao.authUserCheck(authHeader);
+            if(result>0){
+                List<ExpensePojo> expensePojoRecord = expenseRepository.findAllById(transactionId);
+
+                if(expensePojoRecord.size()>0){
+                    ExpensePojo expenseRecord = expensePojoRecord.get(0);
+                    if(Integer.parseInt(expenseRecord.getUserId()) == result){
+                        res.setStatus(HttpServletResponse.SC_OK);
+                        return receiptRepository.findByTransactionId(transactionId);
+                    }
+                    else{
+                        res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        List<ReceiptPojo> newpojo1 = new ArrayList<ReceiptPojo>();
+                        return newpojo1;
+                    }
+                }
+                else{
+                    res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    List<ReceiptPojo> newpojo1 = new ArrayList<ReceiptPojo>();
+                    return newpojo1;
+                }
+            }
+            else{
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                List<ReceiptPojo> newpojo1 = new ArrayList<ReceiptPojo>();
+                return newpojo1;
+            }
+
+        }
+    }
+
+    @RequestMapping(value="/transaction/{id}/attachments/{idAttachments}", method=RequestMethod.DELETE)
+    public String deleteAttachment(@PathVariable(value="id") String transactionId,
+                                   @PathVariable(value="idAttachments") String attachmentId,
+                                   HttpServletRequest req, HttpServletResponse res){
+
+        System.out.println("Local Environment");
+
+        JsonObject json = new JsonObject();
+
+        String header = req.getHeader("Authorization");
+        if(header != null) {
+            int result = userDao.authUserCheck(header);
+            if(result>0){
+                if(transactionId!="") {
+                    if (attachmentId != ""){
+                        List<ReceiptPojo> rpList = receiptRepository.findByReceiptid(attachmentId);
+                        ReceiptPojo rp = rpList.get(0);
+                        System.out.println("Receipt has tx id as" + rp.getTransactionId());
+
+                        if(rp.getTransactionId().equals(transactionId)){
+                            if(Integer.parseInt(rp.getUserId()) == result)
+                            {
+                                receiptRepository.delete(rp);
+                                res.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                                json.addProperty("message","Record deleted");
+                                return json.toString();
+                            }
+                            else{
+                                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                return json.toString();
+                            }
+                        }
+
+                    }
+                    else{
+                        json.addProperty("message", "Invalid attachment Id.");
+                        return json.toString();
+                    }
+                }
+                else{
+                    json.addProperty("message", "Invalid Expense Id.");
+                    return json.toString();
+                }
+            }
+            else{
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                json.addProperty("message","You are unauthorized");
+            }
+
+        }
+        else{
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            json.addProperty("message","You are unauthorized");
+        }
+
+        return null;
+
+    }
+
 
 }
