@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9dc3e4a6-314f-4023-a3fb-f8477dcdca0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../infrastructure/aws/cloudformation/startmyinstance.json" beforeDir="false" afterPath="$PROJECT_DIR$/../infrastructure/aws/cloudformation/startmyinstance.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CloudAssignment2.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-local.properties" afterDir="false" />
-    </list>
+    <list default="true" id="9dc3e4a6-314f-4023-a3fb-f8477dcdca0b" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,7 +14,7 @@
     <session id="740871806">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.33" value="2" />
           <entry key="project.open.time.34" value="1" />
@@ -88,8 +83,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/cloud/assignment2/cloudassignment2/Receipt/ReceiptControllerDev.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="67">
-              <caret line="76" column="28" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
+            <state relative-caret-position="-1385">
+              <caret line="76" selection-start-line="76" selection-end-line="76" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -235,7 +230,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539199930609" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539200015288" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -321,7 +316,7 @@
       <workItem from="1539138287461" duration="128000" />
       <workItem from="1539138519096" duration="2214000" />
       <workItem from="1539141017596" duration="4422000" />
-      <workItem from="1539185439046" duration="6378000" />
+      <workItem from="1539185439046" duration="7107000" />
     </task>
     <servers />
   </component>
@@ -331,11 +326,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13890000" />
+    <option name="totallyTimeSpent" value="14619000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="973" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18429486" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -430,8 +424,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cloud/assignment2/cloudassignment2/Receipt/ReceiptControllerDev.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67">
-          <caret line="76" column="28" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
+        <state relative-caret-position="-1385">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
