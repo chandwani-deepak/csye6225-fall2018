@@ -197,5 +197,75 @@ public class ReceiptController {
 
     }
 
+    @RequestMapping(value="/transaction/{id}/attachments/{idAttachments}", method=RequestMethod.PUT)
+    public String updateReceipt(@PathVariable(value="id") String transactionId,
+                                 @PathVariable(value="idAttachments") String attachmentId,
+                                @RequestParam ("file") MultipartFile file,
+                                HttpServletRequest req, HttpServletResponse res){
+
+        System.out.println("Local Environment");
+
+        JsonObject json = new JsonObject();
+
+        String filePath = "/home/namanbhargava/Documents/";
+        String fileName = file.getOriginalFilename();
+        String NewPath = filePath + fileName;
+        System.out.println("PATH IS " + filePath);
+
+        String header = req.getHeader("Authorization");
+        if(header != null) {
+            int result = userDao.authUserCheck(header);
+            if(result>0){
+                if(transactionId!="") {
+                    if (attachmentId != ""){
+                        List<ReceiptPojo> rpList = receiptRepository.findByReceiptid(attachmentId);
+                        ReceiptPojo rp = rpList.get(0);
+                        System.out.println("Receipt has tx id as" + rp.getTransactionId());
+                        if(rp.getTransactionId().equals(transactionId)){
+                            if(Integer.parseInt(rp.getUserId()) == result){
+                                File dest = new File(NewPath);
+                                try {
+                                    file.transferTo(dest);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                rp.setTransactionId(rp.getTransactionId());
+                                rp.setUrl(NewPath);
+                                rp.setUserId(rp.getUserId());
+                                receiptRepository.save(rp);
+                                res.setStatus(HttpServletResponse.SC_OK);
+                                json.addProperty("message","Record updated!");
+                                return json.toString();
+                            }
+                            else{
+                                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                return json.toString();
+                            }
+                        }
+                    }
+                    else{
+                        json.addProperty("message", "Invalid attachment Id.");
+                        return json.toString();
+                    }
+                }
+                else{
+                    json.addProperty("message", "Invalid Expense Id.");
+                    return json.toString();
+                }
+            }
+            else{
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                json.addProperty("message","You are unauthorized");
+            }
+        }
+        else{
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            json.addProperty("message","You are unauthorized");
+        }
+
+        return null;
+
+    }
+
 
 }
