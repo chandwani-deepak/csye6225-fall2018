@@ -42,22 +42,17 @@ public class ReceiptControllerDev {
     @Autowired
     ReceiptRepository receiptRepository;
 
+    String clientRegion = "us-east-1";
+    String bucketName = "csye6225-fall2018-chandwanid.me.csye6225.com";
 
     @RequestMapping(value="/transaction/{id}/attachments" , method = RequestMethod.POST)
-    public String receiptUpload(@PathVariable(value="id") String transactionId, @RequestParam("file") MultipartFile file, HttpServletRequest req,
+    public String uploadReceipt(@PathVariable(value="id") String transactionId, @RequestParam("file") MultipartFile file, HttpServletRequest req,
                                 HttpServletResponse res){
 
         System.out.println("DEV Environment");
         JsonObject json = new JsonObject();
-        String clientRegion = "us-east-1";
-        String bucketName = "csye6225-fall2018-chandwanid.me.csye6225.com";
-        //String keyName = "csye6225-fall2018-assignment3";
-        //String filePath = "/receipt/";
-        //String filePath = file.location();
+
         String fileName = file.getOriginalFilename();
-        //String NewPath = filePath + fileName;
-        //String NewPath = filePath + fileName;
-        //System.out.println("PATH IS " + filePath);
         String header = req.getHeader("Authorization");
         if(header != null) {
             int result = userDao.authUserCheck(header);
@@ -75,9 +70,8 @@ public class ReceiptControllerDev {
                                     .withCredentials(new ProfileCredentialsProvider())
                                     .build();
 
-
                             s3Client.putObject(new PutObjectRequest(bucketName, fileName,
-                                    new File("/home/deepakchandwani/"+file.getOriginalFilename()))
+                                    new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename()))
                                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
                         }
@@ -90,9 +84,7 @@ public class ReceiptControllerDev {
                             // Amazon S3 couldn't be contacted for a response, or the client
                             // couldn't parse the response from Amazon S3.
                             e.printStackTrace();
-                        } //catch (InterruptedException e) {
-                        // e.printStackTrace();
-                        //}
+                        }
                         // Upload to Amazon S3 End
 
 
@@ -129,8 +121,6 @@ public class ReceiptControllerDev {
         return json.toString();
 
     }
-
-
     //DELETE RECEIPT START
     //key = filename to delete
     @RequestMapping(value="/transaction/{id}/attachments/{idAttachment}" , method = RequestMethod.DELETE)
@@ -201,12 +191,13 @@ public class ReceiptControllerDev {
     //DELETE RECEIPT END
 
 
+
     //GET RECEIPT START
     @RequestMapping(value="/transaction/{id}/attachments", method=RequestMethod.GET)
     public List<ReceiptPojo> getReceipt(@PathVariable(value="id") String transactionId, HttpServletRequest req, HttpServletResponse res){
 
         JsonObject json = new JsonObject();
-        System.out.println("Local Environment");
+        System.out.println("DEV Environment");
         String authHeader = req.getHeader("Authorization");
 
         if (authHeader==null){
@@ -247,6 +238,97 @@ public class ReceiptControllerDev {
         }
     }
     //GET RECEIPT END
+
+    // UPDATE RECEIPT START
+    @RequestMapping(value="/transaction/{id}/attachments/{idAttachments}", method=RequestMethod.PUT)
+    public String updateReceipt(@PathVariable(value="id") String transactionId,
+                                @PathVariable(value="idAttachments") String attachmentId,
+                                @RequestParam ("file") MultipartFile file,
+                                HttpServletRequest req, HttpServletResponse res){
+
+        System.out.println(" DEV Environment");
+        JsonObject json = new JsonObject();
+        String fileName = file.getOriginalFilename();
+
+        String header = req.getHeader("Authorization");
+        if(header != null) {
+            int result = userDao.authUserCheck(header);
+            if(result>0){
+                if(transactionId!="") {
+                    if (attachmentId != ""){
+                        List<ReceiptPojo> rpList = receiptRepository.findByReceiptid(attachmentId);
+                        ReceiptPojo rp = rpList.get(0);
+                        System.out.println("Receipt has tx id as" + rp.getTransactionId());
+                        if(rp.getTransactionId().equals(transactionId)){
+                            if(Integer.parseInt(rp.getUserId()) == result){
+
+
+                                // Upload to Amazon S3 Start
+                                try {
+                                    AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                                            .withRegion(clientRegion)
+                                            .withCredentials(new ProfileCredentialsProvider())
+                                            .build();
+
+
+                                    s3Client.putObject(new PutObjectRequest(bucketName, fileName,
+                                            new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename()))
+                                            .withCannedAcl(CannedAccessControlList.PublicRead));
+
+                                }
+                                catch(AmazonServiceException e) {
+                                    // The call was transmitted successfully, but Amazon S3 couldn't process
+                                    // it, so it returned an error response.
+                                    e.printStackTrace();
+                                }
+                                catch(SdkClientException e) {
+                                    // Amazon S3 couldn't be contacted for a response, or the client
+                                    // couldn't parse the response from Amazon S3.
+                                    e.printStackTrace();
+                                } //catch (InterruptedException e) {
+                                // e.printStackTrace();
+                                //}
+                                // Upload to Amazon S3 End
+
+
+                                rp.setTransactionId(rp.getTransactionId());
+                                rp.setUrl(fileName);
+                                rp.setUserId(rp.getUserId());
+                                receiptRepository.save(rp);
+                                res.setStatus(HttpServletResponse.SC_OK);
+                                json.addProperty("message","Record updated!");
+                                return json.toString();
+                            }
+                            else{
+                                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                return json.toString();
+                            }
+                        }
+                    }
+                    else{
+                        json.addProperty("message", "Invalid attachment Id.");
+                        return json.toString();
+                    }
+                }
+                else{
+                    json.addProperty("message", "Invalid Expense Id.");
+                    return json.toString();
+                }
+            }
+            else{
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                json.addProperty("message","You are unauthorized");
+            }
+        }
+        else{
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            json.addProperty("message","You are unauthorized");
+        }
+
+        return null;
+
+    }
+    // UPDATE RECEIPT END
 
 }
 
