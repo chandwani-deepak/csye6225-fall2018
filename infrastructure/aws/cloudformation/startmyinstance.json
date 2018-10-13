@@ -17,11 +17,11 @@
 	},
 	{
 		"ParameterKey":"MyVpcId",
-		"ParameterValue":"vpc-079af84bd89e12acd"
+		"ParameterValue":"vpc-020bca5d3793e7a6b"
 	},
 	{
 		"ParameterKey":"MySubnetId",
-		"ParameterValue":"subnet-06500ab26b286b9bd"
+		"ParameterValue":"subnet-0d53215d0f0c9a96e"
 	},
 	{
 		"ParameterKey":"AZone",
