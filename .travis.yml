@@ -33,6 +33,25 @@ after_success:
   - pwd
   - ls -al
 
+deploy:
+  - provider: s3
+    local_dir: codedeploy_artifact
+    bucket: $S3_BUCKET
+    region: us-east-1
+    skip_cleanup: true
+    access_key_id: $ACCESS_KEY_ID
+    secret_access_key: $SECRET_ACCESS_KEY
+
+  - provider: codedeploy
+    access_key_id: $ACCESS_KEY_ID
+    bucket: $S3_BUCKET
+    key: csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip
+    bundle_type: zip
+    application: $APPLICATION
+    deployment_group: $DEPLOYMENT_GROUP
+    region: us-east-1
+    secret_access_key: $SECRET_ACCESS_KEY
+    wait-until-deployed: true
 
 branches:
  only:

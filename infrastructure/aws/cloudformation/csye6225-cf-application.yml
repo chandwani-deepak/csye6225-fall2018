@@ -40,6 +40,9 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
+      Tag:
+        Key: Name
+        Value: EC2Instance
       InstanceType:
         Ref: InstanceType
       AvailabilityZone: !Ref AZone
