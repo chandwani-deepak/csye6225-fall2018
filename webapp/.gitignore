@@ -8,8 +8,6 @@ __pycache__/
 
 
 .idea
-mvnw
-mvnw.cmd
 cloudassignment2.iml
 CloudAssignment2.iml
 
@@ -74,7 +72,7 @@ instance/
 docs/_build/
 
 # PyBuilder
-target/
+
 
 # Jupyter Notebook
 .ipynb_checkpoints
