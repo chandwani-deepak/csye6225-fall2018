@@ -43,7 +43,7 @@ public class ReceiptControllerDev {
     ReceiptRepository receiptRepository;
 
     String clientRegion = "us-east-1";
-    String bucketName = "csye6225-fall2018-chandwanid.me.csye6225.com";
+    String bucketName = "csye6225-fall2018-bhargavan.me";
 
     @RequestMapping(value="/transaction/{id}/attachments" , method = RequestMethod.POST)
     public String uploadReceipt(@PathVariable(value="id") String transactionId, @RequestParam("file") MultipartFile file, HttpServletRequest req,
@@ -71,7 +71,7 @@ public class ReceiptControllerDev {
                                     .build();
 
                             s3Client.putObject(new PutObjectRequest(bucketName, fileName,
-                                    new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename()))
+                                    new File("/home/namanbhargava/Downloads/"+file.getOriginalFilename()))
                                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
                         }
@@ -121,8 +121,6 @@ public class ReceiptControllerDev {
         return json.toString();
 
     }
-
-
     //DELETE RECEIPT START
     //key = filename to delete
     @RequestMapping(value="/transaction/{id}/attachments/{idAttachment}" , method = RequestMethod.DELETE)
@@ -130,7 +128,7 @@ public class ReceiptControllerDev {
                               @PathVariable(value="idAttachment") String attachmentId,
                               HttpServletRequest req, HttpServletResponse res){
         String clientRegion = "us-east-1";
-        String bucketName = "csye6225-fall2018-chandwanid.me.csye6225.com";
+        String bucketName = "csye6225-fall2018-bhargavan.me";
         String keyName = "csye6225-fall2018-assignment3";
         String fileName;
         //get file name wrt receiptId from receipt_pojo
@@ -274,7 +272,7 @@ public class ReceiptControllerDev {
 
 
                                     s3Client.putObject(new PutObjectRequest(bucketName, fileName,
-                                            new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename()))
+                                            new File("/home/namanbhargava/Downloads/"+file.getOriginalFilename()))
                                             .withCannedAcl(CannedAccessControlList.PublicRead));
 
                                 }
@@ -331,8 +329,6 @@ public class ReceiptControllerDev {
 
     }
     // UPDATE RECEIPT END
-
-
 
 }
 
