@@ -14,17 +14,17 @@ script:
  - cd ..
  - pwd
 
+branches:
+ only:
+   - dA5
 after_success:
   - pwd
   - ls -al
   - mkdir codedeploy_artifact
-  - pwd
-  - cd chandwani-deepak
-  - ls -al
-  - cd ..
-  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/*.sh . 
   - cp infrastructure/aws/codedeploy/*.yml .
-  - zip -r csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip webapp/target/cloudassignment2-0.0.1-SNAPSHOT.war *.sh *.yml
+  - mv webapp/target/ROOT-2.0.5.RELEASE.war webapp/target/ROOT.war
+  - zip -r csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip webapp/target/ROOT.war *.sh *.yml
   - ls -al
   - mv csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip codedeploy_artifact/
   - ls -al
@@ -35,7 +35,6 @@ after_success:
   - cd ..
   - pwd
   - ls -al
-
 deploy:
   - provider: s3
     local_dir: codedeploy_artifact
@@ -59,5 +58,3 @@ deploy:
     wait-until-deployed: true
     on:
       branch: dA5
-
-
