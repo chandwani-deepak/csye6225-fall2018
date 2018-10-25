@@ -11,7 +11,7 @@ script:
  - mvn install
  - mvn package
  - ls -al
- - cd ../../..
+ - cd ..
  - pwd
 
 after_success:
@@ -22,9 +22,9 @@ after_success:
   - cd chandwani-deepak
   - ls -al
   - cd ..
-  - cp chandwani-deepak/csye6225-fall2018/infrastructure/aws/codedeploy/*.sh .
-  - cp chandwani-deepak/csye6225-fall2018/infrastructure/aws/codedeploy/*.yml .
-  - zip -r csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip . -i /webapp/target/cloudassignment2-0.0.1-SNAPSHOT.war *.sh *.yml
+  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/*.yml .
+  - zip -r csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip webapp/target/cloudassignment2-0.0.1-SNAPSHOT.war *.sh *.yml
   - ls -al
   - mv csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip codedeploy_artifact/
   - ls -al
