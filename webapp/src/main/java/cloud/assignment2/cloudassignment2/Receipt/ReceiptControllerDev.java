@@ -71,7 +71,9 @@ public class ReceiptControllerDev {
                                     .build();
 
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
-				 s3Client.putObject(new PutObjectRequest(bucketName, fileName, file)
+				File convFile = new File( file.getOriginalFilename());
+    				file.transferTo(convFile);
+				 s3Client.putObject(new PutObjectRequest(bucketName, fileName, convFile)
 					.withCannedAcl(CannedAccessControlList.PublicRead));
 
                         }
