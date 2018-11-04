@@ -5,7 +5,7 @@ import cloud.assignment2.cloudassignment2.Expense.ExpenseRepository;
 import cloud.assignment2.cloudassignment2.user.UserDao;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.auth.profile.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileOutputStream;
 
 @RestController
 @Configuration
@@ -76,7 +77,7 @@ public class ReceiptControllerDev {
                             String keyName = "csye6225/profiles/"+expenseRecord.getId() +"/"+fileName;
 
 
-                            s3client.putObject(new PutObjectRequest(bucketName, keyName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
+                            s3Client.putObject(new PutObjectRequest(bucketName, keyName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
 
                             //File newFile = new File(file.getOriginalFilename());
