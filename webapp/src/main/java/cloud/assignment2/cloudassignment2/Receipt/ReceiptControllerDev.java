@@ -15,6 +15,7 @@ import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.google.gson.JsonObject;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -71,16 +72,16 @@ public class ReceiptControllerDev {
                                     .build();
 
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
-				File newFile = new File("/home/cse6225/myImg/", file.getOriginalFilename());
+                            File newFile = new File("/home/cse6225/myImg/", file.getOriginalFilename());
 
-				// Create the file using the touch method of the FileUtils class.
-				// FileUtils.touch(file);
+                            // Create the file using the touch method of the FileUtils class.
+                            // FileUtils.touch(file);
 
-				// Write bytes from the multipart file to disk.
-				FileUtils.writeByteArrayToFile(file, multipartFile.getBytes());
+                            // Write bytes from the multipart file to disk.
+                            FileUtils.writeByteArrayToFile(newFile, file.getBytes());
 
-				 s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+                             s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile)
+                                .withCannedAcl(CannedAccessControlList.PublicRead));
 
                         }
                         catch(AmazonServiceException e) {
@@ -91,6 +92,8 @@ public class ReceiptControllerDev {
                         catch(SdkClientException e) {
                             // Amazon S3 couldn't be contacted for a response, or the client
                             // couldn't parse the response from Amazon S3.
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                         // Upload to Amazon S3 End
