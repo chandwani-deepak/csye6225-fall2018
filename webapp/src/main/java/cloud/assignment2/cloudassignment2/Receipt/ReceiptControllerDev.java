@@ -70,9 +70,9 @@ public class ReceiptControllerDev {
                                     .withCredentials(new ProfileCredentialsProvider())
                                     .build();
 
-                            s3Client.putObject(new PutObjectRequest(bucketName, fileName,
-                                    new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename()))
-                                    .withCannedAcl(CannedAccessControlList.PublicRead));
+                            //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
+				 s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream())
+					.withCannedAcl(CannedAccessControlList.PublicRead));
 
                         }
                         catch(AmazonServiceException e) {
