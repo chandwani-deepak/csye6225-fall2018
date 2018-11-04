@@ -74,7 +74,7 @@ public class ReceiptControllerDev {
                                     .build();
 
                             File newFilename = convertFromMultipart(file);
-                            String keyName = "csye6225/profiles/"+expenseRecord.getId() +"/"+fileName;
+                            String keyName = expenseRecord.getId() +"/"+fileName;
 
 
                             s3Client.putObject(new PutObjectRequest(bucketName, keyName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
