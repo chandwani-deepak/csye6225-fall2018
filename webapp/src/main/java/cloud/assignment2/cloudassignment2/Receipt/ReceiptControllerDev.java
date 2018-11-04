@@ -72,7 +72,7 @@ public class ReceiptControllerDev {
                                     .build();
 
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
-                            File newFile = new File("/home/deepakchandwani/csye6225/dev/myImg/", file.getOriginalFilename());
+                            File newFile = new File("/home/deepakchandwani/csye6225/dev/myImg/"+file.getOriginalFilename());
 
                             // Create the file using the touch method of the FileUtils class.
                             // FileUtils.touch(file);
