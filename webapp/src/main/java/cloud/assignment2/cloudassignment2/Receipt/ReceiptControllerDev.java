@@ -77,13 +77,14 @@ public class ReceiptControllerDev {
 
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
 
-                            File newFile = new File("img/"+file.getOriginalFilename());
+                            File newFile = new File(file.getOriginalFilename());
 
                             // Create the file using the touch method of the FileUtils class.
                             // FileUtils.touch(file);
 
                             // Write bytes from the multipart file to disk.
-                            FileUtils.writeByteArrayToFile(newFile, file.getBytes());
+                            //FileUtils.writeByteArrayToFile(newFile, file.getBytes());
+				FileUtils.copyFile(newFile, file);
 
                              s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile)
                                 .withCannedAcl(CannedAccessControlList.PublicRead));
