@@ -71,8 +71,13 @@ public class ReceiptControllerDev {
                                     .withCredentials(new ProfileCredentialsProvider())
                                     .build();
 
+				//String fileSeparator = System.getProperty("file.separator");
+				//String absoluteFilePath = fileSeparator+"home"+fileSeparator+"deepakchandwani"+fileSeparator+"csye6225"+fileSeparator+"dev"+fileSeparator+"myImg"+fileSeparator+file.getOriginalFilename();
+        			//File file = new File(absoluteFilePath);
+
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
-                            File newFile = new File("/home/deepakchandwani/csye6225/dev/myImg/"+file.getOriginalFilename());
+
+                            File newFile = new File("./../../../../../../../../img/"+file.getOriginalFilename());
 
                             // Create the file using the touch method of the FileUtils class.
                             // FileUtils.touch(file);
