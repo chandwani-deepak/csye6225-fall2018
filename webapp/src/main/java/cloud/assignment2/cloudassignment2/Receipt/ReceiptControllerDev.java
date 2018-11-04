@@ -68,26 +68,21 @@ public class ReceiptControllerDev {
                         try {
                             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                     .withRegion(clientRegion)
-                                    .withCredentials(new ProfileCredentialsProvider())
+                                    //.withCredentials(new ProfileCredentialsProvider())
+                                    .withCredentials(new InstanceProfileCredentialsProvider(false))
                                     .build();
 
-				//String fileSeparator = System.getProperty("file.separator");
-				//String absoluteFilePath = fileSeparator+"home"+fileSeparator+"deepakchandwani"+fileSeparator+"csye6225"+fileSeparator+"dev"+fileSeparator+"myImg"+fileSeparator+file.getOriginalFilename();
-        			//File file = new File(absoluteFilePath);
+                            File newFilename = convertFromMultipart(file);
+                            String keyName = "csye6225/profiles/"+expenseRecord.getId() +"/"+fileName;
 
+
+                            s3client.putObject(new PutObjectRequest(bucketName, keyName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
 
-                            File newFile = new File(file.getOriginalFilename());
+                            //File newFile = new File(file.getOriginalFilename());
+                            //FileUtils.writeByteArrayToFile(newFile, file.getBytes());
 
-                            // Create the file using the touch method of the FileUtils class.
-                            // FileUtils.touch(file);
-
-                            // Write bytes from the multipart file to disk.
-                            FileUtils.writeByteArrayToFile(newFile, file.getBytes());
-				//FileUtils.copyFile(newFile, file);
-
-                             s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile)
-                                .withCannedAcl(CannedAccessControlList.PublicRead));
+                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
                         }
                         catch(AmazonServiceException e) {
@@ -346,6 +341,15 @@ public class ReceiptControllerDev {
 
     }
     // UPDATE RECEIPT END
+
+    public File convertFromMultipart(MultipartFile file) throws Exception {
+        File newFile = new File(file.getOriginalFilename());
+        newFile.createNewFile();
+        FileOutputStream fs = new FileOutputStream(newFile);
+        fs.write(file.getBytes());
+        fs.close();
+        return newFile;
+    }
 
 }
 
