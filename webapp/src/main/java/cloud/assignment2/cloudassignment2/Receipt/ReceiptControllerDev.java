@@ -97,6 +97,8 @@ public class ReceiptControllerDev {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         // Upload to Amazon S3 End
 
@@ -345,6 +347,7 @@ public class ReceiptControllerDev {
 
     public File convertFromMultipart(MultipartFile file) throws Exception {
         File newFile = new File(file.getOriginalFilename());
+        newFile.mkdir();
         newFile.createNewFile();
         FileOutputStream fs = new FileOutputStream(newFile);
         fs.write(file.getBytes());
