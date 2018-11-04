@@ -53,6 +53,24 @@
             "VpcId": { "Ref": "VPC" }
           }
         },
+	"PublicSubnet2": {
+          "Type" : "AWS::EC2::Subnet",
+          "Properties" : {
+            "AvailabilityZone" : "us-east-1b",
+            "CidrBlock" : "10.0.3.0/24",
+            "MapPublicIpOnLaunch": true,
+            "VpcId": { "Ref": "VPC" }
+          }
+        },
+	"PublicSubnet3": {
+          "Type" : "AWS::EC2::Subnet",
+          "Properties" : {
+            "AvailabilityZone" : "us-east-1c",
+            "CidrBlock" : "10.0.4.0/24",
+            "MapPublicIpOnLaunch": true,
+            "VpcId": { "Ref": "VPC" }
+          }
+        },
         "PrivateSubnet1": {
           "Type" : "AWS::EC2::Subnet",
           "Properties" : {
@@ -66,6 +84,14 @@
           "Properties" : {
             "AvailabilityZone" : "us-east-1b",
             "CidrBlock" : "10.0.2.0/24",
+            "VpcId": { "Ref": "VPC" }
+          }
+        },
+	"PrivateSubnet3": {
+          "Type" : "AWS::EC2::Subnet",
+          "Properties" : {
+            "AvailabilityZone" : "us-east-1c",
+            "CidrBlock" : "10.0.5.0/24",
             "VpcId": { "Ref": "VPC" }
           }
         },
