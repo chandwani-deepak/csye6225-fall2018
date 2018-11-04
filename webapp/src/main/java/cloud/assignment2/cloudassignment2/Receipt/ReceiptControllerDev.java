@@ -83,8 +83,8 @@ public class ReceiptControllerDev {
                             // FileUtils.touch(file);
 
                             // Write bytes from the multipart file to disk.
-                            //FileUtils.writeByteArrayToFile(newFile, file.getBytes());
-				FileUtils.copyFile(newFile, file);
+                            FileUtils.writeByteArrayToFile(newFile, file.getBytes());
+				//FileUtils.copyFile(newFile, file);
 
                              s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile)
                                 .withCannedAcl(CannedAccessControlList.PublicRead));
