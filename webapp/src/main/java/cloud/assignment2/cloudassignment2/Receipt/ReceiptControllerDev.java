@@ -5,6 +5,7 @@ import cloud.assignment2.cloudassignment2.Expense.ExpenseRepository;
 import cloud.assignment2.cloudassignment2.user.UserDao;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
@@ -29,11 +30,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.FileOutputStream;
 
 @RestController
 @Configuration
@@ -99,8 +98,10 @@ public class ReceiptControllerDev {
                             //File newFilename = convertFromMultipart(file);
                             //String keyName = expenseRecord.getId() +"/"+fileName;
 
-
-                            s3Client.putObject(new PutObjectRequest(bucketName, fileName, saveFile).withCannedAcl(CannedAccessControlList.PublicRead));
+                            ObjectMetadata metadata = new ObjectMetadata();
+                            metadata.setContentLength(file.getSize());
+                            InputStream inputStream = new FileInputStream(saveFile);
+                            s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata).withCannedAcl(CannedAccessControlList.PublicRead));
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
 
                             //File newFile = new File(file.getOriginalFilename());
