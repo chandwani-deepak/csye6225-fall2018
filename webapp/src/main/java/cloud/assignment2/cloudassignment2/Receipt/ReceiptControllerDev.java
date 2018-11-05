@@ -80,7 +80,8 @@ public class ReceiptControllerDev {
                             }
 
                             String filePath2Upload = realPath2Upload+file.getOriginalFilename();
-                            File saveFile = new File(realPath2Upload);
+                            File saveFile = new File(filePath2Upload);
+                            //System.out.println("MultipartFilePath "+file.getStorageDescription());
                             file.transferTo(saveFile);
                             //File newFilename = convertFromMultipart(file);
                             //String keyName = expenseRecord.getId() +"/"+fileName;
