@@ -182,6 +182,8 @@
                                 "chmod -R g+r conf",
                                 "chmod g+x conf",
                                 "chown -R tomcat webapps/ work/ temp/ logs/",
+				"chown 777 /home/deepakchandwani/Downloads/",
+				"chmod 777 /home/deepakchandwani/Downloads/",
                                 "cd /usr/lib/systemd/system",
                                 "touch tomcat.service",
                                 "echo '[Unit]' > tomcat.service",

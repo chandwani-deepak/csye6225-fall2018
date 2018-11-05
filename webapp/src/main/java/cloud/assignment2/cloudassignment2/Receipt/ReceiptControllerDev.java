@@ -72,11 +72,16 @@ public class ReceiptControllerDev {
                                     .withCredentials(new ProfileCredentialsProvider())
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
                                     .build();
-                            File newFilename = convertFromMultipart(file);
+
+                            //req.getServletContext().getRealPath()
+                            String filePath = "/home/deepakchandwani/Downloads/"+file.getOriginalFilename();
+                            File saveFile = new File(filePath);
+                            file.transferTo(saveFile);
+                            //File newFilename = convertFromMultipart(file);
                             //String keyName = expenseRecord.getId() +"/"+fileName;
 
 
-                            s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
+                            s3Client.putObject(new PutObjectRequest(bucketName, fileName, saveFile).withCannedAcl(CannedAccessControlList.PublicRead));
                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
 
                             //File newFile = new File(file.getOriginalFilename());
@@ -347,7 +352,7 @@ public class ReceiptControllerDev {
     public File convertFromMultipart(MultipartFile file) throws Exception {
         File newFile = new File(file.getOriginalFilename());
         newFile.mkdir();
-        newFile.mkdir();
+        //newFile.mkdir();
         newFile.setReadable(true, false);
         newFile.setWritable(true, false);
         newFile.createNewFile();
