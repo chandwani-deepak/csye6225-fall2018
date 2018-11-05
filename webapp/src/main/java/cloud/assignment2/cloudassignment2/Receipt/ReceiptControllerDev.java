@@ -5,6 +5,7 @@ import cloud.assignment2.cloudassignment2.Expense.ExpenseRepository;
 import cloud.assignment2.cloudassignment2.user.UserDao;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
@@ -50,6 +51,9 @@ public class ReceiptControllerDev {
 
     @Autowired
     Environment env;
+
+    //@Value("${app.profile.name}")
+      //      private String profileName;
 
     String clientRegion = "us-east-1";
     String bucketName = "csye6225-fall2018-chandwanid.me";
