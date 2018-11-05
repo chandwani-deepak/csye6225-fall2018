@@ -72,10 +72,15 @@ public class ReceiptControllerDev {
                                     .withCredentials(new ProfileCredentialsProvider())
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
                                     .build();
+                            String uploadDir = "/uploads/";
+                            String realPath2Upload = req.getServletContext().getRealPath(uploadDir);
+                            if(! new File(realPath2Upload).exists())
+                            {
+                                new File(realPath2Upload).mkdir();
+                            }
 
-                            //req.getServletContext().getRealPath()
-                            String filePath = "/home/deepakchandwani/Downloads/"+file.getOriginalFilename();
-                            File saveFile = new File(filePath);
+                            String filePath2Upload = realPath2Upload+file.getOriginalFilename();
+                            File saveFile = new File(realPath2Upload);
                             file.transferTo(saveFile);
                             //File newFilename = convertFromMultipart(file);
                             //String keyName = expenseRecord.getId() +"/"+fileName;
