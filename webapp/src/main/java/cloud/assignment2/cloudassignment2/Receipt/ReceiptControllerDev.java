@@ -9,6 +9,7 @@ import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -69,11 +70,12 @@ public class ReceiptControllerDev {
                     {
                         // Upload to Amazon S3 Start
                         try {
-                            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                                    .withRegion(clientRegion)
+                            AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+                            //AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                                    //.withRegion(clientRegion)
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
-                                    .withCredentials(new EnvironmentVariableCredentialsProvider())
-                                    .build();
+                                    //.withCredentials(new ProfileCredentialsProvider())
+                                   // .build();
                             String uploadDir = "/uploads/";
                             String realPath2Upload = req.getServletContext().getRealPath(uploadDir);
                             if(! new File(realPath2Upload).exists())
