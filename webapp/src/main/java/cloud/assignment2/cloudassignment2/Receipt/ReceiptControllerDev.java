@@ -73,12 +73,12 @@ public class ReceiptControllerDev {
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
                                     .build();
 
-                            File newFilename = convertFromMultipart(file);
-                            String keyName = expenseRecord.getId() +"/"+fileName;
+                            //File newFilename = convertFromMultipart(file);
+                            //String keyName = expenseRecord.getId() +"/"+fileName;
 
 
-                            s3Client.putObject(new PutObjectRequest(bucketName, keyName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
-                            //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
+                            //s3Client.putObject(new PutObjectRequest(bucketName, keyName, newFilename).withCannedAcl(CannedAccessControlList.PublicRead));
+                            s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
 
                             //File newFile = new File(file.getOriginalFilename());
                             //FileUtils.writeByteArrayToFile(newFile, file.getBytes());
