@@ -347,6 +347,9 @@ public class ReceiptControllerDev {
     public File convertFromMultipart(MultipartFile file) throws Exception {
         File newFile = new File(file.getOriginalFilename());
         newFile.mkdir();
+        newFile.mkdir();
+        newFile.setReadable(true, false);
+        newFile.setWritable(true, false);
         newFile.createNewFile();
         FileOutputStream fs = new FileOutputStream(newFile);
         fs.write(file.getBytes());
