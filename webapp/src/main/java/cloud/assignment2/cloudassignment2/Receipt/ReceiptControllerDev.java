@@ -5,6 +5,7 @@ import cloud.assignment2.cloudassignment2.Expense.ExpenseRepository;
 import cloud.assignment2.cloudassignment2.user.UserDao;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -69,7 +70,7 @@ public class ReceiptControllerDev {
                         try {
                             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                     .withRegion(clientRegion)
-                                    .withCredentials(new ProfileCredentialsProvider())
+                                    .withCredentials(new InstanceProfileCredentialsProvider(false))
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
                                     .build();
                             String uploadDir = "/uploads/";
