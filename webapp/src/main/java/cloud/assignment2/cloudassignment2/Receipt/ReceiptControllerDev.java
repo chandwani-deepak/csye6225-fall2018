@@ -5,6 +5,7 @@ import cloud.assignment2.cloudassignment2.Expense.ExpenseRepository;
 import cloud.assignment2.cloudassignment2.user.UserDao;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import org.springframework.core.env.Environment;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
@@ -47,6 +48,9 @@ public class ReceiptControllerDev {
     @Autowired
     ReceiptRepository receiptRepository;
 
+    @Autowired
+    Environment env;
+
     String clientRegion = "us-east-1";
     String bucketName = "csye6225-fall2018-chandwanid.me";
 
@@ -70,7 +74,7 @@ public class ReceiptControllerDev {
                     {
                         // Upload to Amazon S3 Start
                         try {
-                            AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+                            AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider(env.getProperty("app.profile.name")));
                             //AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                     //.withRegion(clientRegion)
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
