@@ -95,8 +95,8 @@ public class ReceiptControllerDev {
                             // Amazon S3 couldn't be contacted for a response, or the client
                             // couldn't parse the response from Amazon S3.
                             e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        //} catch (IOException e) {
+                           // e.printStackTrace();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
