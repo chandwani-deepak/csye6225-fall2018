@@ -75,6 +75,7 @@ public class ReceiptControllerDev {
                         // Upload to Amazon S3 Start
                         try {
                             AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider(env.getProperty("app.profile.name")));
+                            System.out.println("app.profile.name - "+ env.getProperty("app.profile.name"));
                             //AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                     //.withRegion(clientRegion)
                                     //.withCredentials(new InstanceProfileCredentialsProvider(false))
