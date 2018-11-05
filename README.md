@@ -14,5 +14,5 @@
 ## Build and Deploy instructions for web application
 
 * Open code in IntelliJ
-* Run the springboot code
-* Use `Postman` to test the endpoints
+* Run the springboot code!
+!* Use `Postman` to test the endpoints
