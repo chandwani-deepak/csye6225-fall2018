@@ -78,13 +78,13 @@ public class ReceiptControllerDev {
                     {
                         // Upload to Amazon S3 Start
                         try {
-                            AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider(env.getProperty("app.profile.name")));
+                            //AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider(env.getProperty("spring.profiles.active")));
                             System.out.println("app.profile.name - "+ env.getProperty("app.profile.name"));
-                            //AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                                    //.withRegion(clientRegion)
-                                    //.withCredentials(new InstanceProfileCredentialsProvider(false))
+                            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                                    .withRegion(clientRegion)
+                                    .withCredentials(new InstanceProfileCredentialsProvider(false))
                                     //.withCredentials(new ProfileCredentialsProvider())
-                                   // .build();
+                                    .build();
                             String uploadDir = "/uploads/";
                             String realPath2Upload = req.getServletContext().getRealPath(uploadDir);
                             if(! new File(realPath2Upload).exists())
