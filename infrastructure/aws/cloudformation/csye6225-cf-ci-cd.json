@@ -25,7 +25,7 @@
                 "s3:List*"
             ],
             "Resource": [
-                "arn:aws:s3:::csye6225-fall2018-chandwanid.me",
+                "arn:aws:s3:::csye6225-fall2018-bhargavan.me",
                 "arn:aws:s3:::*/*"
             ]
         }
