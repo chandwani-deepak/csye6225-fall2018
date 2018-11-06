@@ -8,7 +8,7 @@
 ## Prerequisites for building and deploying your application locally
 
 * `Linux Enviroment`
-* `Java 8.1`
+* `Java 8.1.2`
 * `IntelliJ`
 
 ## Build and Deploy instructions for web application
