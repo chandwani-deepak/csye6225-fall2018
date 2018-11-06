@@ -77,12 +77,10 @@ public class ReceiptControllerDev {
                     {
                         // Upload to Amazon S3 Start
                         try {
-                            //AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider(env.getProperty("spring.profiles.active")));
                             System.out.println("app.profile.name - "+ env.getProperty("app.profile.name"));
                             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                     .withRegion(clientRegion)
                                     .withCredentials(new InstanceProfileCredentialsProvider(false))
-                                    //.withCredentials(new ProfileCredentialsProvider())
                                     .build();
                             String uploadDir = "/uploads/";
                             String realPath2Upload = req.getServletContext().getRealPath(uploadDir);
@@ -91,23 +89,23 @@ public class ReceiptControllerDev {
                                 new File(realPath2Upload).mkdir();
                             }
 
-                            String filePath2Upload = realPath2Upload+file.getOriginalFilename();
+                            String filePath2Upload = realPath2Upload+file.getOriginalFilename()+transactionId;
+                            String keyName = file.getOriginalFilename()+transactionId;
                             File saveFile = new File(filePath2Upload);
-                            //System.out.println("MultipartFilePath "+file.getStorageDescription());
                             file.transferTo(saveFile);
-                            //File newFilename = convertFromMultipart(file);
-                            //String keyName = expenseRecord.getId() +"/"+fileName;
 
                             ObjectMetadata metadata = new ObjectMetadata();
                             metadata.setContentLength(file.getSize());
                             InputStream inputStream = new FileInputStream(saveFile);
-                            s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata).withCannedAcl(CannedAccessControlList.PublicRead));
-                            //s3Client.putObject(new PutObjectRequest(bucketName, fileName, new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename())).withCannedAcl(CannedAccessControlList.PublicRead));
+                            s3Client.putObject(new PutObjectRequest(bucketName, keyName, inputStream, metadata).withCannedAcl(CannedAccessControlList.PublicRead));
 
-                            //File newFile = new File(file.getOriginalFilename());
-                            //FileUtils.writeByteArrayToFile(newFile, file.getBytes());
-
-                             //s3Client.putObject(new PutObjectRequest(bucketName, fileName, newFile).withCannedAcl(CannedAccessControlList.PublicRead));
+                            ReceiptPojo receiptPojo = new ReceiptPojo();
+                            receiptPojo.setTransactionId(transactionId);
+                            receiptPojo.setUrl(keyName);
+                            receiptPojo.setUserId(String.valueOf(result));
+                            receiptRepository.save(receiptPojo);
+                            res.setStatus(HttpServletResponse.SC_OK);
+                            json.addProperty("message","File uploaded");
 
                         }
                         catch(AmazonServiceException e) {
@@ -129,13 +127,7 @@ public class ReceiptControllerDev {
 
 
 
-                        ReceiptPojo receiptPojo = new ReceiptPojo();
-                        receiptPojo.setTransactionId(transactionId);
-                        receiptPojo.setUrl(fileName);
-                        receiptPojo.setUserId(String.valueOf(result));
-                        receiptRepository.save(receiptPojo);
-                        res.setStatus(HttpServletResponse.SC_OK);
-                        json.addProperty("message","File uploaded");
+
                     }
                     else{
                         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -166,10 +158,8 @@ public class ReceiptControllerDev {
     public String deleteReceipt(@PathVariable(value="id") String transactionId,
                               @PathVariable(value="idAttachment") String attachmentId,
                               HttpServletRequest req, HttpServletResponse res){
-        String clientRegion = "us-east-1";
-        String bucketName = "csye6225-fall2018-chandwanid.me";
-        String keyName = "csye6225-fall2018-assignment3";
-        String fileName;
+
+        String keyName;
         //get file name wrt receiptId from receipt_pojo
         JsonObject json = new JsonObject();
 
@@ -182,15 +172,15 @@ public class ReceiptControllerDev {
                         List<ReceiptPojo> rpList = receiptRepository.findByReceiptid(attachmentId);
                         ReceiptPojo rp = rpList.get(0);
                         System.out.println("Receipt has tx id as" + rp.getTransactionId());
-                        fileName = rp.getUrl();
+                        keyName = rp.getUrl();
                         if(rp.getTransactionId().equals(transactionId)){
                             if(Integer.parseInt(rp.getUserId()) == result)
                             {
                                 AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                                         .withRegion(clientRegion)
-                                        .withCredentials(new ProfileCredentialsProvider())
+                                        .withCredentials(new InstanceProfileCredentialsProvider(false))
                                         .build();
-                                s3client.deleteObject(bucketName, fileName);
+                                s3client.deleteObject(bucketName, keyName);
 
                                 receiptRepository.delete(rp);
                                 res.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -287,7 +277,7 @@ public class ReceiptControllerDev {
 
         System.out.println(" DEV Environment");
         JsonObject json = new JsonObject();
-        String fileName = file.getOriginalFilename();
+        String keyName = file.getOriginalFilename()+transactionId;
 
         String header = req.getHeader("Authorization");
         if(header != null) {
@@ -306,13 +296,32 @@ public class ReceiptControllerDev {
                                 try {
                                     AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                             .withRegion(clientRegion)
-                                            .withCredentials(new ProfileCredentialsProvider())
+                                            .withCredentials(new InstanceProfileCredentialsProvider(false))
                                             .build();
+                                    String uploadDir = "/uploads/";
+                                    String realPath2Upload = req.getServletContext().getRealPath(uploadDir);
+                                    if(! new File(realPath2Upload).exists())
+                                    {
+                                        new File(realPath2Upload).mkdir();
+                                    }
 
+                                    String filePath2Upload = realPath2Upload+file.getOriginalFilename()+transactionId;
+                                    //String keyName = file.getOriginalFilename()+transactionId;
+                                    File saveFile = new File(filePath2Upload);
+                                    file.transferTo(saveFile);
 
-                                    s3Client.putObject(new PutObjectRequest(bucketName, fileName,
-                                            new File("/home/deepakchandwani/Downloads/"+file.getOriginalFilename()))
-                                            .withCannedAcl(CannedAccessControlList.PublicRead));
+                                    ObjectMetadata metadata = new ObjectMetadata();
+                                    metadata.setContentLength(file.getSize());
+                                    InputStream inputStream = new FileInputStream(saveFile);
+                                    s3Client.putObject(new PutObjectRequest(bucketName, keyName, inputStream, metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+
+                                    rp.setTransactionId(rp.getTransactionId());
+                                    rp.setUrl(keyName);
+                                    rp.setUserId(rp.getUserId());
+                                    receiptRepository.save(rp);
+                                    res.setStatus(HttpServletResponse.SC_OK);
+                                    json.addProperty("message","Record updated!");
+                                    return json.toString();
 
                                 }
                                 catch(AmazonServiceException e) {
@@ -330,13 +339,7 @@ public class ReceiptControllerDev {
                                 // Upload to Amazon S3 End
 
 
-                                rp.setTransactionId(rp.getTransactionId());
-                                rp.setUrl(fileName);
-                                rp.setUserId(rp.getUserId());
-                                receiptRepository.save(rp);
-                                res.setStatus(HttpServletResponse.SC_OK);
-                                json.addProperty("message","Record updated!");
-                                return json.toString();
+
                             }
                             else{
                                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
