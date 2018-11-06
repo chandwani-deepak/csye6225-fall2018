@@ -9,7 +9,7 @@
 
 * `Linux Enviroment`
 * `Java 8.1.2`
-* `IntelliJ`
+* `IntelliJ!!`
 
 ## Build and Deploy instructions for web application
 
