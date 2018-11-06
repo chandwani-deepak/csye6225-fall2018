@@ -298,6 +298,15 @@ public class ReceiptControllerDev {
                                             .withRegion(clientRegion)
                                             .withCredentials(new InstanceProfileCredentialsProvider(false))
                                             .build();
+
+                                    // Delete the file from S3
+                                    s3Client.deleteObject(bucketName, rp.getUrl());
+
+                                    //receiptRepository.delete(rp);
+                                    //res.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                                    //json.addProperty("message","Record deleted Successfully");
+                                    // Delete the file from S3
+
                                     String uploadDir = "/uploads/";
                                     String realPath2Upload = req.getServletContext().getRealPath(uploadDir);
                                     if(! new File(realPath2Upload).exists())
