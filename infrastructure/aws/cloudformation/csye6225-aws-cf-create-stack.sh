@@ -8,13 +8,14 @@ else
 	echo "Stack name present. Checking for CIDRBlock"
 fi
 
-if [ -z "$2" ]
-then
-	echo "No command line argument provided for CIDRBlock"
-	exit 1
-else
-	echo "CIDRBlock address provided."
-fi
+#if [ -z "$2" ]
+#then
+	#echo "No command line argument provided for CIDRBlock"
+	#exit 1
+#else
+	#echo "CIDRBlock address provided."
+#fi
+cidr=10.0.0.0/16
 
 echo "Validating template"
 RC=$(aws cloudformation validate-template --template-body file://./csye6225-cf-networking.json)
@@ -29,7 +30,7 @@ else
 fi
 
 echo "Started with creating networking stack using cloud formation"
-RC=$(aws cloudformation create-stack --stack-name $1-networking --template-body file://./csye6225-cf-networking.json --parameters ParameterKey=VPCNAME,ParameterValue=$1-csye6225-vpc ParameterKey=IGWNAME,ParameterValue=$1-csye6225-InternetGateway ParameterKey=PUBLICROUTETABLENAME,ParameterValue=$1-csye6225-public-route-table ParameterKey=PRIVATEROUTETABLENAME,ParameterValue=$1-csye6225-private-route-table  ParameterKey=CIDRBLOCK,ParameterValue=$2)
+RC=$(aws cloudformation create-stack --stack-name $1-networking --template-body file://./csye6225-cf-networking.json --parameters ParameterKey=VPCNAME,ParameterValue=$1-csye6225-vpc ParameterKey=IGWNAME,ParameterValue=$1-csye6225-InternetGateway ParameterKey=PUBLICROUTETABLENAME,ParameterValue=$1-csye6225-public-route-table ParameterKey=PRIVATEROUTETABLENAME,ParameterValue=$1-csye6225-private-route-table  ParameterKey=CIDRBLOCK,ParameterValue=$cidr)
 
 echo "Networking stack creation in progress. Please wait"
 aws cloudformation wait stack-create-complete --stack-name $1-networking

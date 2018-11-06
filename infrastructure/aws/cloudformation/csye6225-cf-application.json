@@ -209,10 +209,7 @@
                                 "#systemctl enable cloudwatch.service",
                                 "systemctl enable tomcat.service",
                                 "systemctl start tomcat.service",
-				"chown 777 /opt/tomcat/webapps/ROOT/uploads/",
-				"chmod 777 /opt/tomcat/webapps/ROOT/uploads/",
-				"echo '#!/bin/sh' >> /opt/tomcat/bin/setenv.sh \n",
-				"#touch /opt/tomcat/bin/setenv.sh",				
+				"echo '#!/bin/sh' >> /opt/tomcat/bin/setenv.sh \n",	
 				{
 				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.profiles.active=dev\"' >> /opt/tomcat/bin/setenv.sh\n"
 				},
