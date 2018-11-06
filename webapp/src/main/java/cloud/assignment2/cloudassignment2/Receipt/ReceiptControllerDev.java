@@ -89,8 +89,8 @@ public class ReceiptControllerDev {
                                 new File(realPath2Upload).mkdir();
                             }
 
-                            String filePath2Upload = realPath2Upload+file.getOriginalFilename()+transactionId;
-                            String keyName = file.getOriginalFilename()+transactionId;
+                            String filePath2Upload = realPath2Upload+transactionId+file.getOriginalFilename();
+                            String keyName = transactionId+file.getOriginalFilename();
                             File saveFile = new File(filePath2Upload);
                             file.transferTo(saveFile);
 
@@ -277,7 +277,7 @@ public class ReceiptControllerDev {
 
         System.out.println(" DEV Environment");
         JsonObject json = new JsonObject();
-        String keyName = file.getOriginalFilename()+transactionId;
+        String keyName = transactionId+file.getOriginalFilename();
 
         String header = req.getHeader("Authorization");
         if(header != null) {
@@ -305,7 +305,7 @@ public class ReceiptControllerDev {
                                         new File(realPath2Upload).mkdir();
                                     }
 
-                                    String filePath2Upload = realPath2Upload+file.getOriginalFilename()+transactionId;
+                                    String filePath2Upload = realPath2Upload+transactionId+file.getOriginalFilename();
                                     //String keyName = file.getOriginalFilename()+transactionId;
                                     File saveFile = new File(filePath2Upload);
                                     file.transferTo(saveFile);
