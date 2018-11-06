@@ -283,8 +283,14 @@
 
       }
 
+    },
+    "SNSTopic": {
+      "Type" : "AWS::SNS::Topic",
+      "Properties" : {
+        "DisplayName" : "MySNSTopic",
+        "TopicName" : "SNSTopicResetPassword"
+      }
     }
-
   },
 
   "Parameters": {
