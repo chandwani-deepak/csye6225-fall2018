@@ -111,7 +111,9 @@ public class UserController {
 
 			for(Topic topic: topics)
 			{
+
 				if(topic.getTopicArn().endsWith("SNSTopicResetPassword")){
+					System.out.print(userPojo.getEmail());
 					PublishRequest req = new PublishRequest(topic.getTopicArn(),userPojo.getEmail());
 					snsClient.publish(req);
 					break;
