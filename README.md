@@ -7,7 +7,7 @@
 
 ## Prerequisites for building and deploying your application locally
 
-* `Linux Enviroment`
+* `Linux Enviroment11`
 * `Java 8.1.2`
 * `IntelliJ!!`
 
