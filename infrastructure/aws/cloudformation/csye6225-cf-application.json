@@ -16,7 +16,7 @@
 
             "AttributeName": "id",
 
-            "AttributeType": "N"
+            "AttributeType": "S"
 
           }
 
@@ -41,6 +41,10 @@
           "WriteCapacityUnits": "5"
 
         },
+	"TimeToLiveSpecification": { 
+	"AttributeName": "passwordTokenExpiry",
+	"Enabled": "true"
+	},
 
         "TableName": "csye6225"
 

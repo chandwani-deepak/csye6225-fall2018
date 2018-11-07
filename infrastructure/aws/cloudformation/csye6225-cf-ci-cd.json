@@ -24,9 +24,9 @@
                 "s3:*",
                 "s3:List*"
             ],
-            "Resource": [
-                "arn:aws:s3:::csye6225-fall2018-chandwanid.me"
-            ]
+            "Resource": [{
+                "Ref": "BUCKETARN"
+            }]
         }
           ]
         },
@@ -36,7 +36,7 @@
         }]
       }
     },
-   "E2S3Access": {
+   "EC2S3Access": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
         "PolicyDocument": {
@@ -56,7 +56,7 @@
             }
           ]
         },
-        "ManagedPolicyName": "E2S3Access",
+        "ManagedPolicyName": "EC2S3Access",
         "Roles": [{
           "Ref": "CodeDeployEC2ServiceRole"
         }]
@@ -369,6 +369,9 @@
       "Type": "String"
     },
     "CDOMAIN": {
+      "Type": "String"
+    },
+    "BUCKETARN": {
       "Type": "String"
     },
     "LAMBDAUSERROLE": {
