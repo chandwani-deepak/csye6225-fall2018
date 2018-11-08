@@ -85,4 +85,15 @@ STACKDETAILS=$(aws cloudformation describe-stacks --stack-name $1-application --
 echo "Application stack creation complete"
 echo "Application Stack id: $STACKDETAILS"
 
+aws cloudformation create-stack --stack-name $1-serverless --template-body file://./csye6225-cf-serverless.json
+aws cloudformation wait stack-create-complete --stack-name $1-serverless
+AccountId=$(aws iam get-user|python -c "import json as j,sys;o=j.load(sys.stdin);print o['User']['Arn'].split(':')[4]")
+echo "AccountId: $AccountId"
+aws lambda add-permission \
+        --function-name "csye6225-fall2018-lambda" \
+        --action 'lambda:InvokeFunction' \
+        --principal events.amazonaws.com \
+        --source-arn "arn:aws:sns:us-east-1:352915658406:SNSTopicResetPassword"
+STACKDETAILS=$(aws cloudformation describe-stacks --stack-name $1-serverless --query Stacks[0].StackId --output text)
+
 exit 0
