@@ -6,7 +6,7 @@
 		    "FunctionName" : { "Ref" : "LambdaFunction" },
 		    "Principal": "sns.amazonaws.com",
 		    "Action": "lambda:InvokeFunction",
-		    "SourceArn" : "arn:aws:sns:us-east-1:352915658406:SNSTopicResetPassword"
+		    "SourceArn" : { "Ref" : "SNSTOPICARN" }
 		  }
 		},
 		"LambdaExecRole": {
@@ -40,10 +40,10 @@
 		"LambdaFunction": {
 		  "Type": "AWS::Lambda::Function",
 		  "Properties": {
-			"Handler": "LogEvent.handler",
+			"Handler": "LogEvent::handleRequest",
 			"Role": { "Fn::GetAtt" : ["LambdaExecRole", "Arn"] },
 			"Code": {
-			  "S3Bucket": "lambda.csye6225-fall2018-chandwanid.me",
+			  "S3Bucket": { "Ref" : "LAMBDABUCKET" },
 			  "S3Key": "lambda-dpk-nmn.zip"
 			},
 			"Runtime": "java8",
@@ -53,5 +53,13 @@
 			
 		  }
 		}
-	}
+	},
+	"Parameters": {
+	    "LAMBDABUCKET": {
+	      "Type": "String"
+	    },
+	    "SNSTOPICARN": {
+	      "Type": "String"
+	    }
+	  }
 }
