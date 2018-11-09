@@ -6,8 +6,8 @@ files:
     destination: /opt/tomcat/webapps
   - source: ./cloudWatchRestart.sh
     destination: /home/centos
-  - source: ./infrastructure/aws/cloudwatch/awslogs.conf
-    destination: /home/centos
+  - source: ./infrastructure/aws/cloudwatch/cloudwatch-config.json
+    destination: /opt/cloudwatch-config.json
 
 hooks:
   AfterInstall:
