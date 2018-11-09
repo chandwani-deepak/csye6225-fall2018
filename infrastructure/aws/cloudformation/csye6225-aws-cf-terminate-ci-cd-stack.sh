@@ -48,7 +48,7 @@ RC=$(aws cloudformation wait stack-delete-complete --stack-name $1-ci-cd)
 
 if [ $? -eq 0 ]
 then
-  echo "Application stack deletion complete"
+  echo "ci-cd stack deletion complete"
 else
  	echo "Failed Stack deletion"
  	exit 1

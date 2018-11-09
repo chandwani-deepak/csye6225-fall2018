@@ -4,6 +4,10 @@ os: linux
 files:             
   - source: ./webapp/target/ROOT.war
     destination: /opt/tomcat/webapps
+  - source: ./cloudWatchRestart.sh
+    destination: /home/centos
+  - source: .infrastructure/aws/cloudwatch/awslogs.conf
+    destination: /home/centos
 
 hooks:
   AfterInstall:
@@ -14,4 +18,7 @@ hooks:
    - location: ./applicationStart.sh
      timeout: 180
      runas: centos
-  
+  AfterInstall:
+   - location: ./cloudWatchRestart.sh
+     timeout: 360
+     runas: centos
