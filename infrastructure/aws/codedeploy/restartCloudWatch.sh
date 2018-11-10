@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-sudo cp /home/centos/awslogs.conf /opt/tomcat/logs/
+sudo cp /opt/cloudwatch-config.json /opt/tomcat/logs/
 sudo service awslogs start
 sudo service awslogs stop
 sudo service awslogs restart
