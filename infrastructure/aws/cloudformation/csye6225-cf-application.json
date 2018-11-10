@@ -209,18 +209,6 @@
                                 "echo '[Install]' >> tomcat.service",
                                 "echo 'WantedBy=multi-user.target' >> tomcat.service",
                                 "systemctl daemon-reload",
-
-				"cd /opt",
-				"echo # Download Agent",
-				"wget https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm",
-				"echo # Install Package",
-				"rpm -U ./amazon-cloudwatch-agent.rpm",
-				"echo # Starting CloudWatch Agent",
-				"/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/cloudwatch-config.json -s",
-                                "systemctl start cloudwatch.service",
-                                "systemctl enable cloudwatch.service",
-
-				"cd /usr/lib/systemd/system",
                                 "systemctl enable tomcat.service",
                                 "systemctl start tomcat.service",
 				"echo '#!/bin/sh' >> /opt/tomcat/bin/setenv.sh \n",	
@@ -297,13 +285,6 @@
 
       }
 
-    },
-    "SNSTopic": {
-      "Type" : "AWS::SNS::Topic",
-      "Properties" : {
-        "DisplayName" : "MySNSTopic",
-        "TopicName" : "SNSTopicResetPassword"
-      }
     }
   },
 
