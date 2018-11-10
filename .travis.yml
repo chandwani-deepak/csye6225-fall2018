@@ -18,6 +18,7 @@ script:
 after_success:
   - pwd
   - ls -al
+  - mv infrastructure/aws/cloudwatch/cloudwatch-config.json /opt/
   - mkdir codedeploy_artifact
   - cp infrastructure/aws/codedeploy/*.sh . 
   - cp infrastructure/aws/codedeploy/*.yml .
