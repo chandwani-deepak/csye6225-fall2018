@@ -41,10 +41,6 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepo;
 
-	final AmazonCloudWatch cw =
-			AmazonCloudWatchClientBuilder.defaultClient();
-
-
 	@RequestMapping(value="/hello")
 	public String newfunc(){
 		return "hii";
@@ -97,19 +93,6 @@ public class UserController {
 			
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("message", "User added successfully");
-			Dimension dimension = new Dimension()
-					.withName("UNIQUE_PAGES")
-					.withValue("URLS");
-			MetricDatum datum = new MetricDatum()
-					.withMetricName("PAGES_VISITED")
-					.withUnit(StandardUnit.Count)
-					.withValue(1.0)
-					.withDimensions(dimension);
-			PutMetricDataRequest request = new PutMetricDataRequest()
-					.withNamespace("SITE/TRAFFIC")
-					.withMetricData(datum);
-
-			PutMetricDataResult response = cw.putMetricData(request);
 			return jsonObject.toString();
 		}
 		JsonObject jsonObject = new JsonObject();
