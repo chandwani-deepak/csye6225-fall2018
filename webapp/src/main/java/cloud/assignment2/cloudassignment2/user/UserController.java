@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
+import com.amazonaws.services.cloudwatch.model.*;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.amazonaws.services.sns.model.PublishRequest;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import com.google.gson.JsonObject;
 
@@ -36,6 +40,18 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	final AmazonCloudWatch cw =
+			AmazonCloudWatchClientBuilder.defaultClient();
+	Dimension dimension = new Dimension()
+			.withName("UNIQUE_PAGES")
+			.withValue("URLS");
+	MetricDatum datum = new MetricDatum()
+			.withMetricName("PAGES_VISITED")
+			.withUnit(StandardUnit.Count)
+			.withValue(1.0)
+			.withDimensions(dimension);
+
 
 	@RequestMapping(value="/hello")
 	public String newfunc(){
@@ -89,6 +105,19 @@ public class UserController {
 			
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("message", "User added successfully");
+			Dimension dimension = new Dimension()
+					.withName("UNIQUE_PAGES")
+					.withValue("URLS");
+			MetricDatum datum = new MetricDatum()
+					.withMetricName("PAGES_VISITED")
+					.withUnit(StandardUnit.Count)
+					.withValue(1.0)
+					.withDimensions(dimension);
+			PutMetricDataRequest request = new PutMetricDataRequest()
+					.withNamespace("SITE/TRAFFIC")
+					.withMetricData(datum);
+
+			PutMetricDataResult response = cw.putMetricData(request);
 			return jsonObject.toString();
 		}
 		JsonObject jsonObject = new JsonObject();
