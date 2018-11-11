@@ -43,14 +43,6 @@ public class UserController {
 
 	final AmazonCloudWatch cw =
 			AmazonCloudWatchClientBuilder.defaultClient();
-	Dimension dimension = new Dimension()
-			.withName("UNIQUE_PAGES")
-			.withValue("URLS");
-	MetricDatum datum = new MetricDatum()
-			.withMetricName("PAGES_VISITED")
-			.withUnit(StandardUnit.Count)
-			.withValue(1.0)
-			.withDimensions(dimension);
 
 
 	@RequestMapping(value="/hello")
