@@ -5,7 +5,7 @@ files:
   - source: ./webapp/target/ROOT.war
     destination: /opt/tomcat/webapps
   - source: cloudwatch-config.json
-    destination: /opt/
+    destination: /opt
 hooks:
   AfterInstall:
    - location: ./afterInstall.sh
