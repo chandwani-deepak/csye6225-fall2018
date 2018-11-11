@@ -16,7 +16,7 @@
 
             "AttributeName": "id",
 
-            "AttributeType": "N"
+            "AttributeType": "S"
 
           }
 
@@ -227,6 +227,10 @@
 				},
 				"chmod +x /opt/tomcat/bin/setenv.sh\n",
 				"#systemctl daemon-reload\n",
+				"echo # Download Agent",
+				"wget https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm",
+				"echo # Install Package",
+				"rpm -U ./amazon-cloudwatch-agent.rpm",
 				"systemctl enable tomcat.service\n",
                                 "systemctl start tomcat.service\n"
                             ]
