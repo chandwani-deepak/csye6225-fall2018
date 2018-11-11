@@ -317,7 +317,10 @@
             }
           ]
         },
-        "ManagedPolicyName": {"Ref": "LOGROLEPOLICYNAME"}
+        "ManagedPolicyName": {"Ref": "LOGROLEPOLICYNAME"},
+	"Roles": [{
+          "Ref": "CodeDeployEC2ServiceRole"
+        }]
       }
     },
     "CodeDeployServiceRoleInstanceProfile": {

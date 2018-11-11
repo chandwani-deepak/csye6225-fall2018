@@ -4,6 +4,8 @@ import cloud.assignment2.cloudassignment2.user.UserDao;
 import cloud.assignment2.cloudassignment2.user.UserPojo;
 import com.google.gson.JsonObject;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +25,14 @@ public class ExpenseController {
     @Autowired
     ExpenseRepository expenseRepository;
 
+    private final static Logger logger= LoggerFactory.getLogger(ExpenseController.class);
+
     @RequestMapping(value="/transaction")
     public List<ExpensePojo> getAllExpense(HttpServletRequest req, HttpServletResponse res){
         String authHeader = req.getHeader("Authorization");
         if (authHeader==null){
             List<ExpensePojo> newpojo1 = new ArrayList<ExpensePojo>();
+            logger.info("Getting expense");
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return newpojo1;
         }
