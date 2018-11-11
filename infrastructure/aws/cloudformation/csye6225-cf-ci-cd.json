@@ -25,7 +25,7 @@
                 "s3:List*"
             ],
             "Resource": [
-                "arn:aws:s3:::csye6225-fall2018-chandwanid.me",
+                "arn:aws:s3:::csye6225-fall2018-bhargavan.me",
                 "arn:aws:s3:::*/*"
             ]
         }
@@ -58,6 +58,27 @@
           ]
         },
         "ManagedPolicyName": "E2S3Access",
+        "Roles": [{
+          "Ref": "CodeDeployEC2ServiceRole"
+        }]
+      }
+    },
+    "SNSAccess": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "sns:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ]
+        },
+        "ManagedPolicyName": "SNSAccess",
         "Roles": [{
           "Ref": "CodeDeployEC2ServiceRole"
         }]
@@ -276,6 +297,29 @@
         }
       }
     },
+    "LogRolePolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "arn:aws:logs:*:*:*"
+              ]
+            }
+          ]
+        },
+        "ManagedPolicyName": {"Ref": "LOGROLEPOLICYNAME"}
+      }
+    },
     "CodeDeployServiceRoleInstanceProfile": {
       "Type": "AWS::IAM::InstanceProfile",
       "Properties": {
@@ -286,6 +330,7 @@
         "InstanceProfileName": "CodeDeployServiceRoleInstanceProfile"
       }
     }
+
   },
   "Parameters": {
     "CDARN": {
@@ -298,6 +343,12 @@
       "Type": "String"
     },
     "CDOMAIN": {
+      "Type": "String"
+    },
+    "LAMBDAUSERROLE": {
+      "Type": "String"
+    },
+    "LOGROLEPOLICYNAME": {
       "Type": "String"
     }
   }

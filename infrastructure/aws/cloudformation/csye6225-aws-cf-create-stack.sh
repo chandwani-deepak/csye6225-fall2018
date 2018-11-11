@@ -48,7 +48,7 @@ echo "Fetching domain name from Route 53"
 DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 DOMAIN_NAME="${DOMAIN_NAME%?}"
 echo "$DOMAIN_NAME"
-#DOMAIN_NAME="csye6225-fall2018-chandwanid.me"
+#DOMAIN_NAME="csye6225-fall2018-bhargavan.me"
 
 PUBLIC_SUBNET=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet`][PhysicalResourceId]' --output text)
 SUBNET_ID_1=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PrivateSubnet1`][PhysicalResourceId]' --output text)
@@ -66,7 +66,7 @@ CD_DOMAIN="code-deploy."${DOMAIN_NAME}
 WEBAPP_DOMAIN="web-app."${DOMAIN_NAME}
 
 echo "Starting cicd"
-RC=$(aws cloudformation create-stack --stack-name $1-ci-cd --capabilities "CAPABILITY_NAMED_IAM" --template-body file://./csye6225-cf-ci-cd.json --parameters ParameterKey=CDARN,ParameterValue=arn:aws:s3:::$CD_DOMAIN/* ParameterKey=WEBAPPARN,ParameterValue=arn:aws:s3:::$WEBAPP_DOMAIN/* ParameterKey=CDAPPNAME,ParameterValue=CSYE6225 ParameterKey=CDOMAIN,ParameterValue=$CD_DOMAIN)
+RC=$(aws cloudformation create-stack --stack-name $1-ci-cd --capabilities "CAPABILITY_NAMED_IAM" --template-body file://./csye6225-cf-ci-cd.json --parameters ParameterKey=CDARN,ParameterValue=arn:aws:s3:::$CD_DOMAIN/* ParameterKey=WEBAPPARN,ParameterValue=arn:aws:s3:::$WEBAPP_DOMAIN/* ParameterKey=CDAPPNAME,ParameterValue=CSYE6225 ParameterKey=CDOMAIN,ParameterValue=$CD_DOMAIN ParameterKey=LAMBDAUSERROLE,ParameterValue=LambdaExecutionRole ParameterKey=LOGROLEPOLICYNAME,ParameterValue=LogRolePolicy)
 
 echo "CI stack creation in progress. Please wait"
 aws cloudformation wait stack-create-complete --stack-name $1-ci-cd
@@ -83,5 +83,20 @@ aws cloudformation wait stack-create-complete --stack-name $1-application
 STACKDETAILS=$(aws cloudformation describe-stacks --stack-name $1-application --query Stacks[0].StackId --output text)
 echo "Application stack creation complete"
 echo "Application Stack id: $STACKDETAILS"
+
+
+LAMBDABUCKET="lambda.$DOMAIN_NAME"
+echo "LAMBDA_BUCKET:- $LAMBDABUCKET"
+
+AccountId=$(aws iam get-user|python -c "import json as j,sys;o=j.load(sys.stdin);print o['User']['Arn'].split(':')[4]")
+echo "AccountId: $AccountId"
+
+SNSTOPIC_ARN="arn:aws:sns:us-east-1:$AccountId:SNSTopicResetPassword"
+echo "SNSTOPIC_ARN: $SNSTOPIC_ARN"
+
+aws cloudformation create-stack --stack-name $1-serverless --capabilities "CAPABILITY_NAMED_IAM" --template-body file://./csye6225-cf-serverless.json --parameters ParameterKey=LAMBDABUCKET,ParameterValue=$LAMBDABUCKET ParameterKey=SNSTOPICARN,ParameterValue=$SNSTOPIC_ARN
+aws cloudformation wait stack-create-complete --stack-name $1-serverless
+STACKDETAILS=$(aws cloudformation describe-stacks --stack-name $1-serverless --query Stacks[0].StackId --output text)
+
 
 exit 0
