@@ -16,6 +16,7 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.Topic;
+import com.timgroup.statsd.StatsDClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,9 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepo;
 
+	@Autowired
+	private StatsDClient statsDClient;
+
 	@RequestMapping(value="/hello")
 	public String newfunc(){
 		return "hii";
@@ -54,6 +58,9 @@ public class UserController {
 	
 	@RequestMapping(value="/")
 	public String authUser(HttpServletRequest request, HttpServletResponse response) {
+
+		statsDClient.incrementCounter("endpoint.homepage.http.get");
+
 		String authHeader = request.getHeader("Authorization");
 		JsonObject jsonObject = new JsonObject();
 		if(authHeader!=null)
@@ -99,6 +106,8 @@ public class UserController {
 		jsonObject.addProperty("message", "User already exists");
 		return jsonObject.toString();
 	}
+
+
 
 	@RequestMapping(value="/user/resetPwd" , method=RequestMethod.POST)
 	public String resetPassword(@RequestBody UserPojo userPojo){
