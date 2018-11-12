@@ -9,16 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
+import com.amazonaws.services.cloudwatch.model.*;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.Topic;
+import com.timgroup.statsd.StatsDClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import com.google.gson.JsonObject;
 
@@ -37,6 +42,9 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepo;
 
+	@Autowired
+	private StatsDClient statsDClient;
+
 	@RequestMapping(value="/hello")
 	public String newfunc(){
 		return "hii";
@@ -50,6 +58,9 @@ public class UserController {
 	
 	@RequestMapping(value="/")
 	public String authUser(HttpServletRequest request, HttpServletResponse response) {
+
+		statsDClient.incrementCounter("endpoint.homepage.http.get");
+
 		String authHeader = request.getHeader("Authorization");
 		JsonObject jsonObject = new JsonObject();
 		if(authHeader!=null)
@@ -79,6 +90,9 @@ public class UserController {
 	
 	@RequestMapping(value="/user/register" , method=RequestMethod.POST)
 		public String addUser(@RequestBody UserPojo userpojo) {
+
+		statsDClient.incrementCounter("endpoint.homepage.http.post");
+
 		if((userdao.checkUser(userpojo.getEmail()) == null)){
 			UserPojo up = new UserPojo();
 			up.setId(userpojo.getId());
@@ -95,6 +109,8 @@ public class UserController {
 		jsonObject.addProperty("message", "User already exists");
 		return jsonObject.toString();
 	}
+
+
 
 	@RequestMapping(value="/user/resetPwd" , method=RequestMethod.POST)
 	public String resetPassword(@RequestBody UserPojo userPojo){
