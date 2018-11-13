@@ -6,6 +6,7 @@ import cloud.assignment2.cloudassignment2.user.UserDao;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.timgroup.statsd.StatsDClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
@@ -51,6 +52,9 @@ public class ReceiptControllerDev {
     @Autowired
     Environment env;
 
+    @Autowired
+    private StatsDClient statsDClient;
+
     //@Value("${app.profile.name}")
       //      private String profileName;
 
@@ -61,6 +65,7 @@ public class ReceiptControllerDev {
     public String uploadReceipt(@PathVariable(value="id") String transactionId, @RequestParam("file") MultipartFile file, HttpServletRequest req,
                                 HttpServletResponse res){
 
+        statsDClient.incrementCounter("_UploadReceipt_API_");
         System.out.println("DEV Environment");
         JsonObject json = new JsonObject();
 
@@ -159,6 +164,8 @@ public class ReceiptControllerDev {
                               @PathVariable(value="idAttachment") String attachmentId,
                               HttpServletRequest req, HttpServletResponse res){
 
+
+        statsDClient.incrementCounter("_DeleteReceipt_API_");
         String keyName;
         //get file name wrt receiptId from receipt_pojo
         JsonObject json = new JsonObject();
@@ -225,6 +232,8 @@ public class ReceiptControllerDev {
     @RequestMapping(value="/transaction/{id}/attachments", method=RequestMethod.GET)
     public List<ReceiptPojo> getReceipt(@PathVariable(value="id") String transactionId, HttpServletRequest req, HttpServletResponse res){
 
+
+        statsDClient.incrementCounter("_GetAllReceipt_API_");
         JsonObject json = new JsonObject();
         System.out.println("DEV Environment");
         String authHeader = req.getHeader("Authorization");
@@ -275,6 +284,8 @@ public class ReceiptControllerDev {
                                 @RequestParam ("file") MultipartFile file,
                                 HttpServletRequest req, HttpServletResponse res){
 
+
+        statsDClient.incrementCounter("_UpdateReceipt_API_");
         System.out.println(" DEV Environment");
         JsonObject json = new JsonObject();
         String keyName = transactionId+file.getOriginalFilename();
