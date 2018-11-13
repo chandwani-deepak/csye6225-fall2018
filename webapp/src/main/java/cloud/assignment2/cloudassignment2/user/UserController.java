@@ -59,7 +59,7 @@ public class UserController {
 	@RequestMapping(value="/")
 	public String authUser(HttpServletRequest request, HttpServletResponse response) {
 
-		statsDClient.incrementCounter("/user");
+		statsDClient.incrementCounter("endpoint.homepage.http.get");
 
 		String authHeader = request.getHeader("Authorization");
 		JsonObject jsonObject = new JsonObject();
@@ -91,7 +91,7 @@ public class UserController {
 	@RequestMapping(value="/user/register" , method=RequestMethod.POST)
 		public String addUser(@RequestBody UserPojo userpojo) {
 
-		statsDClient.incrementCounter("/user/register");
+		statsDClient.incrementCounter("endpoint.homepage.http.post");
 
 		if((userdao.checkUser(userpojo.getEmail()) == null)){
 			UserPojo up = new UserPojo();
@@ -114,7 +114,7 @@ public class UserController {
 
 	@RequestMapping(value="/user/resetPwd" , method=RequestMethod.POST)
 	public String resetPassword(@RequestBody UserPojo userPojo){
-		statsDClient.incrementCounter("/user/resetPwd");
+
 		JsonObject jsonObject = new JsonObject();
 		String email = userPojo.getEmail();
 		UserPojo up = userRepo.findUserPojoByEmail(email);
