@@ -59,7 +59,7 @@ public class UserController {
 	@RequestMapping(value="/")
 	public String authUser(HttpServletRequest request, HttpServletResponse response) {
 
-		statsDClient.incrementCounter("endpoint.homepage.http.get");
+		statsDClient.incrementCounter("/");
 
 		String authHeader = request.getHeader("Authorization");
 		JsonObject jsonObject = new JsonObject();
@@ -116,6 +116,7 @@ public class UserController {
 	@RequestMapping(value="/user/resetPwd" , method=RequestMethod.POST)
 	public String resetPassword(@RequestBody UserPojo userPojo){
 
+		statsDClient.incrementCounter("/user/resetPwd");
 		JsonObject jsonObject = new JsonObject();
 		String email = userPojo.getEmail();
 		UserPojo up = userRepo.findUserPojoByEmail(email);
