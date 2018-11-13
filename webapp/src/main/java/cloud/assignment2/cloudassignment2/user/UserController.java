@@ -91,7 +91,8 @@ public class UserController {
 	@RequestMapping(value="/user/register" , method=RequestMethod.POST)
 		public String addUser(@RequestBody UserPojo userpojo) {
 
-		statsDClient.incrementCounter("endpoint.homepage.http.post");
+		//statsDClient.incrementCounter("endpoint.homepage.http.post");
+		statsDClient.incrementCounter("/user/register");
 
 		if((userdao.checkUser(userpojo.getEmail()) == null)){
 			UserPojo up = new UserPojo();
