@@ -42,7 +42,12 @@
 
         },
 
-        "TableName": "csye6225"
+        "TableName": "csye6225",
+
+	   "TTL": {
+               "AttributeName": "passwordTokenExpiry",
+               "Enabled": "true"
+        }
 
       }
 
