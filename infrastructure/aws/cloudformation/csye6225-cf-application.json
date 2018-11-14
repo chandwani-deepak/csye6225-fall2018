@@ -44,7 +44,7 @@
 
         "TableName": "csye6225",
 
-	   "TimeToLiveToken": {
+	   "TimeToLiveSpecification": {
                "AttributeName": "passwordTokenExpiry",
                "Enabled": "true"
         }
