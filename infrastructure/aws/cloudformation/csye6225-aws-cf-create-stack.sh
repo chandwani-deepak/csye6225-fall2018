@@ -48,8 +48,6 @@ echo "Fetching domain name from Route 53"
 DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 DOMAIN_NAME="${DOMAIN_NAME%?}"
 echo "$DOMAIN_NAME"
-#DOMAIN_NAME="csye6225-fall2018-bhargavan.me"
->>>>>>> 81b882cdf974eb60ac67d005ca1c97ad5a9d9edc
 
 PUBLIC_SUBNET=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet`][PhysicalResourceId]' --output text)
 SUBNET_ID_1=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PrivateSubnet1`][PhysicalResourceId]' --output text)
