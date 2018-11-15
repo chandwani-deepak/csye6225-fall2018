@@ -3,7 +3,10 @@ package cloud.assignment2.cloudassignment2.Expense;
 import cloud.assignment2.cloudassignment2.user.UserDao;
 import cloud.assignment2.cloudassignment2.user.UserPojo;
 import com.google.gson.JsonObject;
+import com.timgroup.statsd.StatsDClient;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +26,19 @@ public class ExpenseController {
     @Autowired
     ExpenseRepository expenseRepository;
 
+    @Autowired
+    private StatsDClient statsDClient;
+
+    private final static Logger logger= LoggerFactory.getLogger(ExpenseController.class);
+
     @RequestMapping(value="/transaction")
     public List<ExpensePojo> getAllExpense(HttpServletRequest req, HttpServletResponse res){
+
+        statsDClient.incrementCounter("_GetAllTransactions_API_");
         String authHeader = req.getHeader("Authorization");
         if (authHeader==null){
             List<ExpensePojo> newpojo1 = new ArrayList<ExpensePojo>();
+            logger.info("Getting expense");
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return newpojo1;
         }
@@ -50,6 +61,8 @@ public class ExpenseController {
     @RequestMapping(value="/transaction", method=RequestMethod.POST)
     public String addExpense(@RequestBody ExpensePojo expensePojo, HttpServletRequest req, HttpServletResponse res){
 
+
+        statsDClient.incrementCounter("_AddTransaction_API_");
         JsonObject json = new JsonObject();
         if(!expensePojo.getAmount().isEmpty()) {
             String authHeader = req.getHeader("Authorization");
@@ -90,6 +103,8 @@ public class ExpenseController {
     public String deleteExpense(@PathVariable(value="id") String transactionId, HttpServletRequest req
                                             , HttpServletResponse res){
 
+
+        statsDClient.incrementCounter("_DeleteTransaction_API_");
         JsonObject json = new JsonObject();
         String header = req.getHeader("Authorization");
         if(header != null){
@@ -138,6 +153,9 @@ public class ExpenseController {
     @RequestMapping(value="/transaction/{id}",method = RequestMethod.PUT)
     public String updateExpense(@RequestBody ExpensePojo expensePojo, @PathVariable(value="id") String transactionId,
                                 HttpServletRequest req, HttpServletResponse res){
+
+
+        statsDClient.incrementCounter("_UpdateTransaction_API_");
         JsonObject json = new JsonObject();
 
         String header = req.getHeader("Authorization");

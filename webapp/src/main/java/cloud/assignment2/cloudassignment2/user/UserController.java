@@ -8,12 +8,22 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
+import com.amazonaws.services.cloudwatch.model.*;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.Topic;
+import com.timgroup.statsd.StatsDClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import com.google.gson.JsonObject;
 
@@ -29,6 +39,12 @@ public class UserController {
 	@Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	@Autowired
+	private UserRepository userRepo;
+
+	@Autowired
+	private StatsDClient statsDClient;
+
 	@RequestMapping(value="/hello")
 	public String newfunc(){
 		return "hii";
@@ -37,11 +53,15 @@ public class UserController {
 	@RequestMapping(value="/user")
 	public List<UserPojo> getAll()
 	{
+		statsDClient.incrementCounter("_GetAllUser_API_");
 		return userdao.getAll();
 	}
 	
 	@RequestMapping(value="/")
 	public String authUser(HttpServletRequest request, HttpServletResponse response) {
+
+		statsDClient.incrementCounter("_UserLoggedinStatusCheck_API_");
+
 		String authHeader = request.getHeader("Authorization");
 		JsonObject jsonObject = new JsonObject();
 		if(authHeader!=null)
@@ -71,6 +91,10 @@ public class UserController {
 	
 	@RequestMapping(value="/user/register" , method=RequestMethod.POST)
 		public String addUser(@RequestBody UserPojo userpojo) {
+
+		//statsDClient.incrementCounter("endpoint.homepage.http.post");
+		statsDClient.incrementCounter("_RegisterUser_API_");
+
 		if((userdao.checkUser(userpojo.getEmail()) == null)){
 			UserPojo up = new UserPojo();
 			up.setId(userpojo.getId());
@@ -85,6 +109,41 @@ public class UserController {
 		}
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("message", "User already exists");
+		return jsonObject.toString();
+	}
+
+
+
+	@RequestMapping(value="/user/resetPwd" , method=RequestMethod.POST)
+	public String resetPassword(@RequestBody UserPojo userPojo){
+
+		statsDClient.incrementCounter("_ResetPassword_API_");
+		JsonObject jsonObject = new JsonObject();
+		String email = userPojo.getEmail();
+		UserPojo up = userRepo.findUserPojoByEmail(email);
+		if(up != null)
+		{
+			AmazonSNS snsClient = AmazonSNSAsyncClientBuilder.standard()
+					.withCredentials(new InstanceProfileCredentialsProvider(false))
+					.build();
+			List<Topic> topics = snsClient.listTopics().getTopics();
+
+			for(Topic topic: topics)
+			{
+
+				if(topic.getTopicArn().endsWith("SNSTopicResetPassword")){
+					System.out.print(userPojo.getEmail());
+					PublishRequest req = new PublishRequest(topic.getTopicArn(),userPojo.getEmail());
+					snsClient.publish(req);
+					break;
+				}
+			}
+			jsonObject.addProperty("message","email sent to addr");
+
+		}
+		else{
+			jsonObject.addProperty("message","User not found");
+		}
 		return jsonObject.toString();
 	}
 	
