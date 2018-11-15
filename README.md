@@ -15,4 +15,5 @@
 
 * Open code in IntelliJ
 * Run the springboot code!
-!* Use `Postman` to test the endpoints!!
+* Use `Postman` to test the endpoints!!
+
