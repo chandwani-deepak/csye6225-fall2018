@@ -24,7 +24,8 @@
                 "s3:*",
                 "s3:List*"
             ],
-            "Resource": [{"Ref" : "BUCKETARN"}]
+            "Resource": [{"Ref" : "BUCKETARN"},
+                "arn:aws:s3:::*/*"]
         }
           ]
         },
