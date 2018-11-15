@@ -16,7 +16,7 @@
 
             "AttributeName": "id",
 
-            "AttributeType": "N"
+            "AttributeType": "S"
 
           }
 
@@ -42,7 +42,12 @@
 
         },
 
-        "TableName": "csye6225"
+        "TableName": "csye6225",
+
+	   "TimeToLiveSpecification": {
+               "AttributeName": "passwordTokenExpiry",
+               "Enabled": "true"
+        }
 
       }
 
@@ -209,7 +214,7 @@
                                 "#systemctl enable cloudwatch.service",
                                 "systemctl enable tomcat.service",
                                 "systemctl start tomcat.service",
-				"echo '#!/bin/sh' >> /opt/tomcat/bin/setenv.sh \n",
+				"echo '#!/bin/sh' >> /opt/tomcat/bin/setenv.sh \n",	
 				{
 				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.profiles.active=dev\"' >> /opt/tomcat/bin/setenv.sh\n"
 				},
@@ -227,6 +232,10 @@
 				},
 				"chmod +x /opt/tomcat/bin/setenv.sh\n",
 				"#systemctl daemon-reload\n",
+				"echo # Download Agent",
+				"wget https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm",
+				"echo # Install Package",
+				"rpm -U ./amazon-cloudwatch-agent.rpm",
 				"systemctl enable tomcat.service\n",
                                 "systemctl start tomcat.service\n"
                             ]
@@ -284,7 +293,6 @@
       }
 
     }
-
   },
 
   "Parameters": {
