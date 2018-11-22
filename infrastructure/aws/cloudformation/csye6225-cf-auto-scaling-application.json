@@ -2,54 +2,31 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Resources": {
     "DynamoDB": {
-
       "Type": "AWS::DynamoDB::Table",
-
       "Properties": {
-
         "AttributeDefinitions": [
-
           {
-
             "AttributeName": "id",
-
             "AttributeType": "S"
-
           }
-
         ],
-
         "KeySchema": [
-
           {
-
             "AttributeName": "id",
-
             "KeyType": "HASH"
-
           }
-
         ],
-
         "ProvisionedThroughput": {
-
           "ReadCapacityUnits": "5",
-
           "WriteCapacityUnits": "5"
-
         },
-
         "TableName": "csye6225",
-
 	   "TimeToLiveSpecification": {
                "AttributeName": "passwordTokenExpiry",
                "Enabled": "true"
         }
-
       }
-
     },
-
     "DBSubnetGroup": {
 
       "Type": "AWS::RDS::DBSubnetGroup",
@@ -69,6 +46,10 @@
           {
 
             "Ref": "SUBNETID2"
+
+          },{
+
+            "Ref": "SUBNETID3"
 
           }
 
@@ -119,15 +100,10 @@
     },
 
     "AutoScalingConfig": {
-
       "Type": "AWS::AutoScaling::LaunchConfiguration",
-
-      "Properties": {
-		
+      "Properties": {		
         "ImageId": "ami-9887c6e7",
-
-	"AssociatePublicIpAddress": "true",
-		
+		"AssociatePublicIpAddress": true,		
         "InstanceType": "t2.micro",
         "BlockDeviceMappings": [{
 		"DeviceName": "/dev/sdf",
@@ -208,8 +184,8 @@
 				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${DBPassword}\"' >> /opt/tomcat/bin/setenv.sh\n"
 				},
 				{
-                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${APPDOMAIN}\"' >> /opt/tomcat8/bin/setenv.sh\n"
-                },
+				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${APPDOMAIN}\"' >> /opt/tomcat/bin/setenv.sh\n"
+				},
 				{
 				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Ddomain.name=${DOMAIN}\"' >> /opt/tomcat/bin/setenv.sh\n"
 				},
@@ -242,6 +218,9 @@
           },
           {
             "Ref": "PUBLICSUBNETID2"
+          },
+	{
+            "Ref": "PUBLICSUBNETID3"
           }
         ],
         "LaunchConfigurationName": {
@@ -342,7 +321,7 @@
 	"LoadBalancer": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties": {
-        "Name": "load-balancer-1",
+        "Name": "load-balancer",
         "Scheme": "internet-facing",
         "SecurityGroups": [
           {
@@ -355,6 +334,9 @@
           },
           {
             "Ref": "PUBLICSUBNETID2"
+          },
+          {
+            "Ref": "PUBLICSUBNETID3"
           }
         ],
         "Type": "application",
@@ -402,7 +384,7 @@
           "HttpCode": "401,200"
         },
         "HealthCheckIntervalSeconds": 30,
-        "HealthCheckTimeoutSeconds": 5,
+        "HealthCheckTimeoutSeconds": 20,
         "HealthyThresholdCount": 3,
         "Protocol": "HTTP",
         "VpcId": {
@@ -523,6 +505,9 @@
 	"PUBLICSUBNETID2": {
       "Type": "String"
     },
+	"PUBLICSUBNETID3": {
+      "Type": "String"
+    },
 
     "SGID": {
 
@@ -557,6 +542,13 @@
     },
 
     "SUBNETID2": {
+
+      "Description": "The subnet id",
+
+      "Type": "String"
+
+    },
+   "SUBNETID3": {
 
       "Description": "The subnet id",
 

@@ -51,8 +51,12 @@ APP_DOMAIN_NAME="web-app.${DOMAIN_NAME}"
 
 PUBLIC_SUBNET=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet`][PhysicalResourceId]' --output text)
 PUBLIC_SUBNET2=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet2`][PhysicalResourceId]' --output text)
+PUBLIC_SUBNET3=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet3`][PhysicalResourceId]' --output text)
+
 SUBNET_ID_1=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PrivateSubnet1`][PhysicalResourceId]' --output text)
 SUBNET_ID_2=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PrivateSubnet2`][PhysicalResourceId]' --output text)
+SUBNET_ID_3=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PrivateSubnet3`][PhysicalResourceId]' --output text)
+
 
 SGID=$(aws ec2 describe-security-groups --filters Name=ip-permission.from-port,Values=8080 --query 'SecurityGroups[*].{Name:GroupId}[0]' --output text)
 
@@ -88,7 +92,7 @@ echo "CI Stack id: $STACKDETAILS"
 echo "Fetching CodeDeployServiceRole Arn"
 CDSR_ARN=$(aws iam get-role --role-name CodeDeployServiceRole --query Role.Arn --output text)
 
-aws cloudformation create-stack --stack-name $1-application --template-body file://./csye6225-cf-auto-scaling-application.json --parameters ParameterKey=VPCID,ParameterValue=$VPC_ID ParameterKey=PUBLICSUBNETID,ParameterValue=$PUBLIC_SUBNET ParameterKey=PUBLICSUBNETID2,ParameterValue=$PUBLIC_SUBNET2 ParameterKey=SUBNETID1,ParameterValue=$SUBNET_ID_1 ParameterKey=SUBNETID2,ParameterValue=$SUBNET_ID_2 ParameterKey=DOMAIN,ParameterValue=$DOMAIN_NAME ParameterKey=APPDOMAIN,ParameterValue=$APP_DOMAIN_NAME ParameterKey=SGID,ParameterValue=$SGID ParameterKey=LBSG,ParameterValue=$LBSG ParameterKey=CERTIFICATE,ParameterValue=$CERTIFICATE ParameterKey=DBSGID,ParameterValue=$DBSGID ParameterKey=DBUser,ParameterValue=$DBUser ParameterKey=CDAPPNAME,ParameterValue=$CDAPPNAME ParameterKey=DBPassword,ParameterValue=$DBPassword ParameterKey=CDSRARN,ParameterValue=$CDSR_ARN 
+aws cloudformation create-stack --stack-name $1-application --template-body file://./csye6225-cf-auto-scaling-application.json --parameters ParameterKey=VPCID,ParameterValue=$VPC_ID ParameterKey=PUBLICSUBNETID,ParameterValue=$PUBLIC_SUBNET ParameterKey=PUBLICSUBNETID2,ParameterValue=$PUBLIC_SUBNET2 ParameterKey=PUBLICSUBNETID3,ParameterValue=$PUBLIC_SUBNET3 ParameterKey=SUBNETID1,ParameterValue=$SUBNET_ID_1 ParameterKey=SUBNETID2,ParameterValue=$SUBNET_ID_2 ParameterKey=SUBNETID3,ParameterValue=$SUBNET_ID_3 ParameterKey=DOMAIN,ParameterValue=$DOMAIN_NAME ParameterKey=APPDOMAIN,ParameterValue=$APP_DOMAIN_NAME ParameterKey=SGID,ParameterValue=$SGID ParameterKey=LBSG,ParameterValue=$LBSG ParameterKey=CERTIFICATE,ParameterValue=$CERTIFICATE ParameterKey=DBSGID,ParameterValue=$DBSGID ParameterKey=DBUser,ParameterValue=$DBUser ParameterKey=CDAPPNAME,ParameterValue=$CDAPPNAME ParameterKey=DBPassword,ParameterValue=$DBPassword ParameterKey=CDSRARN,ParameterValue=$CDSR_ARN 
 
 
 aws cloudformation wait stack-create-complete --stack-name $1-application
