@@ -47,7 +47,7 @@ echo "Fetching domain name from Route 53"
 DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 DOMAIN_NAME="${DOMAIN_NAME%?}"
 echo "$DOMAIN_NAME"
-APP_DOMAIN_NAME="web-app."${DOMAIN_NAME%?}
+APP_DOMAIN_NAME="web-app.${DOMAIN_NAME}"
 
 PUBLIC_SUBNET=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet`][PhysicalResourceId]' --output text)
 PUBLIC_SUBNET2=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet2`][PhysicalResourceId]' --output text)
@@ -70,7 +70,7 @@ DBPassword=masteruserpassword
 
 
 CD_DOMAIN="code-deploy."${DOMAIN_NAME}
-WEBAPP_DOMAIN="web-app."${DOMAIN_NAME}
+WEBAPP_DOMAIN=${DOMAIN_NAME}
 
 BUCKETARN="arn:aws:s3:::"${DOMAIN_NAME}
 echo "BUCKETARN is "$BUCKETARN

@@ -208,7 +208,7 @@
 				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${DBPassword}\"' >> /opt/tomcat/bin/setenv.sh\n"
 				},
 				{
-                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${APPDOMAIN}\"' >> /usr/share/tomcat8/bin/setenv.sh\n"
+                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${APPDOMAIN}\"' >> /opt/tomcat8/bin/setenv.sh\n"
                 },
 				{
 				  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Ddomain.name=${DOMAIN}\"' >> /opt/tomcat/bin/setenv.sh\n"
