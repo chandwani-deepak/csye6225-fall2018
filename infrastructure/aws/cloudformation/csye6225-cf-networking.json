@@ -225,19 +225,26 @@
         "GroupName": "csye6225-load-balancer-sg",
         "GroupDescription": "Security group for load balancer",
         "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
-          },
-	 {
-            "IpProtocol": "tcp",
-            "FromPort": "22",
-            "ToPort": "22",
-            "CidrIp": "0.0.0.0/0"
-          }
-        ],
+			{
+				"IpProtocol": "tcp",
+				"FromPort": "443",
+				"ToPort": "443",
+				"CidrIp": "0.0.0.0/0"
+			}
+		],
+	    "SecurityGroupEgress": [
+			{
+				"IpProtocol":"tcp",
+				"FromPort":"8080",
+				"ToPort":"8080",
+				"DestinationSecurityGroupId":{
+					"Fn::GetAtt":[
+						"EC2SecurityGroupWebServer",
+						"GroupId"
+					]
+				}
+			}
+		],
         "VpcId": {
           "Ref": "VPC"
         }
@@ -255,51 +262,38 @@
 
              "GroupDescription" : "Security group for web server",             
 
-             "VpcId" : { "Ref": "VPC" }
+             "VpcId" : { "Ref": "VPC" },
+		"SecurityGroupIngress": [
+					{
+						"IpProtocol":"tcp",
+						"FromPort":"443",
+						"ToPort":"443",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol":"tcp",
+						"FromPort":"8080",
+						"ToPort":"8080",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol":"tcp",
+						"FromPort":"80",
+						"ToPort":"80",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol":"tcp",
+						"FromPort":"22",
+						"ToPort":"22",
+						"CidrIp": "0.0.0.0/0"
+					}
+				]
 
           }
 
         },
-		"OutboundRule": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "IpProtocol": "tcp",
-        "FromPort": "8080",
-        "ToPort": "8080",
-        "DestinationSecurityGroupId": {
-          "Fn::GetAtt": [
-            "EC2SecurityGroupWebServer",
-            "GroupId"
-          ]
-        },
-        "GroupId": {
-          "Fn::GetAtt": [
-            "EC2SecurityGroupLoadBalancer",
-            "GroupId"
-          ]
-        }
-      }
-    },
-	"InboundRule": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "IpProtocol": "tcp",
-        "FromPort": "8080",
-        "ToPort": "8080",
-        "SourceSecurityGroupId": {
-          "Fn::GetAtt": [
-            "EC2SecurityGroupLoadBalancer",
-            "GroupId"
-          ]
-        },
-        "GroupId": {
-          "Fn::GetAtt": [
-            "EC2SecurityGroupWebServer",
-            "GroupId"
-          ]
-        }
-      }
-    },
+		
 		
 
         "EC2SecurityGroupDBServer":{
