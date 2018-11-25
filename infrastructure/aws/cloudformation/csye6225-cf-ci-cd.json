@@ -10,16 +10,73 @@
             {
               "Action": [
                 "s3:List*",
-                "s3:Get*"
+                "s3:Get*",
+		"s3:Put*"
               ],
               "Effect": "Allow",
               "Resource": [{
                 "Ref": "CDARN"
               }]
-            }
+            },
+	   {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*",
+                "s3:List*"
+            ],
+            "Resource": [{"Ref" : "BUCKETARN"},
+                "arn:aws:s3:::*/*"]
+        }
           ]
         },
         "ManagedPolicyName": "CodeDeployEC2S3",
+        "Roles": [{
+          "Ref": "CodeDeployEC2ServiceRole"
+        }]
+      }
+    },
+   "E2S3Access": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "s3:Delete*",
+                "s3:Get*",
+                "s3:Put*",
+                "s3:List*"
+              ],
+              "Effect": "Allow",
+              "Resource": [{
+                "Ref": "WEBAPPARN"
+              }]
+            }
+          ]
+        },
+        "ManagedPolicyName": "E2S3Access",
+        "Roles": [{
+          "Ref": "CodeDeployEC2ServiceRole"
+        }]
+      }
+    },
+    "SNSAccess": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "sns:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ]
+        },
+        "ManagedPolicyName": "SNSAccess",
         "Roles": [{
           "Ref": "CodeDeployEC2ServiceRole"
         }]
@@ -208,34 +265,38 @@
         }
       }
     },
-    "CodeDeployApp": {
-      "Type": "AWS::CodeDeploy::Application",
+    "LogRolePolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ApplicationName": {
-          "Ref": "CDAPPNAME"
-        }
-      }
-    },
-    "CodeDeployGroup": {
-      "Type": "AWS::CodeDeploy::DeploymentGroup",
-      "Properties": {
-        "ApplicationName": {
-          "Ref": "CDAPPNAME"
-        },
-        "DeploymentGroupName": "CSYE6225-CodeDeploymentGroup",
-        "Ec2TagFilters": [
-          {
-            "Key": "Name",
-            "Type": "KEY_AND_VALUE",
-            "Value": "MyEC2Instance"
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "arn:aws:logs:*:*:*"
+              ]
+            },
+	   {
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:PutMetricAlarm",
+                "cloudwatch:PutMetricData"
+            ],
+            "Resource": "*"
           }
-        ],
-        "ServiceRoleArn": {
-          "Fn::GetAtt": [
-            "CodeDeployServiceRole",
-            "Arn"
           ]
-        }
+        },
+        "ManagedPolicyName": {"Ref": "LOGROLEPOLICYNAME"},
+	"Roles": [{
+          "Ref": "CodeDeployEC2ServiceRole"
+        }]
       }
     },
     "CodeDeployServiceRoleInstanceProfile": {
@@ -248,6 +309,7 @@
         "InstanceProfileName": "CodeDeployServiceRoleInstanceProfile"
       }
     }
+
   },
   "Parameters": {
     "CDARN": {
@@ -260,6 +322,15 @@
       "Type": "String"
     },
     "CDOMAIN": {
+      "Type": "String"
+    },
+    "LAMBDAUSERROLE": {
+      "Type": "String"
+    },
+    "LOGROLEPOLICYNAME": {
+      "Type": "String"
+    },
+    "BUCKETARN": {
       "Type": "String"
     }
   }
