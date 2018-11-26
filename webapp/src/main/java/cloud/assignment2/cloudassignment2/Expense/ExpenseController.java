@@ -75,7 +75,14 @@ public class ExpenseController {
                     expensePojo.setUserId(String.valueOf(result));
                     expenseRepository.save(expensePojo);
                     res.setStatus(HttpServletResponse.SC_CREATED);
-                    json.addProperty("message", "Expense added for the User.");
+
+                    String id = String.valueOf(result);
+                    List<ExpensePojo> ep = expenseRepository.findByUserId(id);
+                    System.out.println("ep size is: "+ep.size());
+                    //json.addProperty("message", "Expense added for the User.");
+                    json.addProperty("transactionId", ep.get((ep.size())-1).getId());
+                    res.setHeader("transactionId", ep.get((ep.size())-1).getId());
+                    logger.info("addTransaction_transactionId "+ep.get((ep.size())-1).getId());
                 }
                 else
                 {
