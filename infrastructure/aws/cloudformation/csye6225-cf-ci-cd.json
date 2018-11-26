@@ -265,34 +265,38 @@
         }
       }
     },
-    "CodeDeployApp": {
-      "Type": "AWS::CodeDeploy::Application",
+    "LogRolePolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ApplicationName": {
-          "Ref": "CDAPPNAME"
-        }
-      }
-    },
-    "CodeDeployGroup": {
-      "Type": "AWS::CodeDeploy::DeploymentGroup",
-      "Properties": {
-        "ApplicationName": {
-          "Ref": "CDAPPNAME"
-        },
-        "DeploymentGroupName": "CSYE6225-CodeDeploymentGroup",
-        "Ec2TagFilters": [
-          {
-            "Key": "Name",
-            "Type": "KEY_AND_VALUE",
-            "Value": "MyEC2Instance"
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "arn:aws:logs:*:*:*"
+              ]
+            },
+	   {
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:PutMetricAlarm",
+                "cloudwatch:PutMetricData"
+            ],
+            "Resource": "*"
           }
-        ],
-        "ServiceRoleArn": {
-          "Fn::GetAtt": [
-            "CodeDeployServiceRole",
-            "Arn"
           ]
-        }
+        },
+        "ManagedPolicyName": {"Ref": "LOGROLEPOLICYNAME"},
+	"Roles": [{
+          "Ref": "CodeDeployEC2ServiceRole"
+        }]
       }
     },
     "LogRolePolicy": {
