@@ -7,13 +7,15 @@
 
 ## Prerequisites for building and deploying your application locally
 
-* `Linux Enviroment11`
-* `Java 8.1.2`
-* `IntelliJ!!`
+* `Linux Enviroment`
+* `Java 8`
+* `IntelliJ`
 
 ## Build and Deploy instructions for web application
 
 * Open code in IntelliJ
-* Run the springboot code!
-* Use `Postman` to test the endpoints!!
+* Run the springboot code
+* Use `Postman` to test the endpoints
+
+
 
