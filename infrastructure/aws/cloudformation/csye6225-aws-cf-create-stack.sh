@@ -49,6 +49,7 @@ DOMAIN_NAME="${DOMAIN_NAME%?}"
 echo "$DOMAIN_NAME"
 APP_DOMAIN_NAME="web-app.${DOMAIN_NAME}"
 
+
 PUBLIC_SUBNET=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet`][PhysicalResourceId]' --output text)
 PUBLIC_SUBNET2=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet2`][PhysicalResourceId]' --output text)
 PUBLIC_SUBNET3=$(aws cloudformation list-stack-resources --stack-name $1-networking --query 'StackResourceSummaries[?LogicalResourceId==`PublicSubnet3`][PhysicalResourceId]' --output text)
@@ -80,8 +81,13 @@ BUCKETARN="arn:aws:s3:::"${DOMAIN_NAME}
 echo "BUCKETARN is "$BUCKETARN
 CDAPPNAME="CSYE6225"
 
+BUCKETARN="arn:aws:s3:::"${DOMAIN_NAME}
+echo "BUCKETARN is "$BUCKETARN
+
 echo "Starting cicd"
+
 RC=$(aws cloudformation create-stack --stack-name $1-ci-cd --capabilities "CAPABILITY_NAMED_IAM" --template-body file://./csye6225-cf-ci-cd.json --parameters ParameterKey=CDARN,ParameterValue=arn:aws:s3:::$CD_DOMAIN/* ParameterKey=WEBAPPARN,ParameterValue=arn:aws:s3:::$WEBAPP_DOMAIN/* ParameterKey=CDOMAIN,ParameterValue=$CD_DOMAIN ParameterKey=CDAPPNAME,ParameterValue=$CDAPPNAME ParameterKey=LAMBDAUSERROLE,ParameterValue=LambdaExecutionRole ParameterKey=LOGROLEPOLICYNAME,ParameterValue=LogRolePolicy ParameterKey=BUCKETARN,ParameterValue=$BUCKETARN)
+
 
 echo "CI stack creation in progress. Please wait"
 aws cloudformation wait stack-create-complete --stack-name $1-ci-cd
