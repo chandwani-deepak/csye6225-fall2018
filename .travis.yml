@@ -14,6 +14,7 @@ script:
  - cd ..
  - pwd
 
+
 after_success:
   - pwd
   - ls -al
@@ -55,4 +56,3 @@ deploy:
     wait-until-deployed: true
     on:
       all_branches: true
-
