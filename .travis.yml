@@ -14,13 +14,11 @@ script:
  - cd ..
  - pwd
 
-
 after_success:
   - pwd
   - ls -al
-  - mkdir codedeploy_artifact
-  - cp infrastructure/aws/codedeploy/*.sh . 
-  - cp infrastructure/aws/codedeploy/*.yml .
+  - mkdir codedeploy_artifact	
+  - cp infrastructure/aws/codedeploy/*.sh .
   - mv webapp/target/ROOT-2.0.5.RELEASE.war webapp/target/ROOT.war
   - zip -r csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip webapp/target/ROOT.war *.sh *.yml *.json
   - ls -al
@@ -44,6 +42,7 @@ deploy:
     on:
       all_branches: true
 
+
   - provider: codedeploy
     access_key_id: $ACCESS_KEY_ID
     bucket: $S3_BUCKET
@@ -56,3 +55,4 @@ deploy:
     wait-until-deployed: true
     on:
       all_branches: true
+
