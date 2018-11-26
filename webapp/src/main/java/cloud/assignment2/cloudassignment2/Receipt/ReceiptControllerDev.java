@@ -60,11 +60,11 @@ public class ReceiptControllerDev {
 
     private final static Logger logger= LoggerFactory.getLogger(ExpenseController.class);
 
-    //@Value("${app.profile.name}")
-      //      private String profileName;
+    @Value("${bucket.name}")
+    private String bucketName;
 
     String clientRegion = "us-east-1";
-    String bucketName = "web-app.csye6225-fall2018-chandwanid.me";
+    //String bucketName = "web-app.csye6225-fall2018-chandwanid.me";
 
     @RequestMapping(value="/transaction/{id}/attachments" , method = RequestMethod.POST)
     public String uploadReceipt(@PathVariable(value="id") String transactionId, @RequestParam("file") MultipartFile file, HttpServletRequest req,
@@ -88,7 +88,7 @@ public class ReceiptControllerDev {
                     {
                         // Upload to Amazon S3 Start
                         try {
-                            System.out.println("app.profile.name - "+ env.getProperty("app.profile.name"));
+                            //System.out.println("app.profile.name - "+ env.getProperty("app.profile.name"));
                             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                                     .withRegion(clientRegion)
                                     .withCredentials(new InstanceProfileCredentialsProvider(false))
