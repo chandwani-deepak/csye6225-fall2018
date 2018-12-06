@@ -17,5 +17,3 @@
 * Run the springboot code
 * Use `Postman` to test the endpoints
 * Reports has been added
-*
-
