@@ -285,11 +285,12 @@
 	    },
 		
 
-        "EC2SecurityGroupWebServer": {
+    "EC2SecurityGroupWebServer": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupName": "csye6225-webapp",
         "GroupDescription": "Security group for web server",
+	"SecurityGroupIngress": [{"IpProtocol": "tcp","CidrIp": "0.0.0.0/0","FromPort": 22,"ToPort": 22}],
         "VpcId": {
           "Ref": "VPC"
         }
